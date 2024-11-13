@@ -1,0 +1,2 @@
+python-dotenv==1.0.1
+ragas==0.1.21
