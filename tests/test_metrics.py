@@ -3,16 +3,26 @@ import sys
 import json
 import logging
 import time
-import pandas as pd
 from typing import List, Dict, Any
+from dataclasses import field
 
+import unittest
+import pandas as pd
 from dotenv import load_dotenv
-from langfuse import Langfuse
+# from ruamel.yaml import YAML
 from datasets import Dataset
+from langchain_community.embeddings import OCIGenAIEmbeddings
+from langfuse import Langfuse
 from ragas.metrics import faithfulness, answer_similarity, context_precision
-from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas.run_config import RunConfig
+from ragas.llms import LangchainLLMWrapper
+from ragas.embeddings import LangchainEmbeddingsWrapper
+from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas import evaluate
+
+# from langchad.chains.rag_chad_chain import RAGChadChain
+# from langchad.chat_oci import ChatOCI
+# from langchad.tests.custom_ragas_metric_prompt import CUSTOM_LONG_FORM_ANSWER_PROMPT
 
 EVAL_DATASET_PATH = os.path.join(
     os.path.dirname(__file__), f"data/{os.environ.get('DATASET_FILENAME')}"
@@ -235,3 +245,25 @@ class RagasEvaluation:
             # However sometimes the traces are still not fully created
             time.sleep(10)
         self.evaluate_batch(trace_name)
+        
+        
+class TestRagas(unittest.TestCase):
+    langfuse = Langfuse()
+    langfuse.auth_check()
+    yaml_default = YAML(typ="safe")
+    with open(os.environ["LANGCHAD_CONFIG_PATH"], "r") as file:
+        default_config = yaml_default.load(file)
+    yaml_test = YAML(typ="safe")
+    with open(os.environ["TEST_CONFIG_PATH"], "r") as file:
+        test_config = yaml_test.load(file)
+    ragas_eval = RagasEvaluation(
+        langfuse=langfuse, default_config=default_config, test_config=test_config
+    )
+    ragas_eval.run_experiment(
+        generate_traces=test_config["test"]["generate_traces"],
+        trace_name=test_config["test"]["trace_name"],
+    )
+
+
+if __name__ == "__main__":
+    unittest.main(exit=False)
