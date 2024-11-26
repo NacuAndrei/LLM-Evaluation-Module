@@ -63,4 +63,69 @@ class RagasEvaluation:
     def get_response_from_chain(self, response):
         return response["answer"]
     
+    def score_with_ragas(self, query: str, ground_truth: str, chunks: List[str], answer: str):
+        scores = {}
+        for m in self.metrics:
+            logger.debug(f"calculating: {m.name}")
+            scores[m.name] = m.score(
+                row={
+                    "question": query,
+                    "ground_truth": ground_truth,
+                    "context": chunks,
+                    "answer": answer,
+                }
+            )
+            logger.info(f"{m.name} score: {scores[m.name]}")
+        return scores
     
+    def generate_single_trace(self, example: Dict[str, Any], trace_name: str = "rag"):
+        question = example["question"]
+        ground_truth = example["ground_truth"]
+        trace = self.langfuse.trace(name=trace_name)
+
+        prompt = f"Please formulate the answer for the following question in one or multiple sentences. This is the question: {question}"
+        response = self.chain.invoke(prompt)
+
+        contexts = self.get_chunks_from_chain(response)
+        trace.span(
+            name="retrieval",
+            input={"question": question},
+            output={"contexts": contexts},
+        )
+
+        answer = self.get_response_from_chain(response)
+
+        trace.span(
+            name="generation",
+            input={
+                "question": question,
+                "contexts": contexts,
+                "ground_truth": ground_truth,
+            },
+            output={"answer": answer},
+        )
+        
+    def generate_traces(self, trace_name: str = "rag"):
+        self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
+
+        self.all_examples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
+        for example in self.all_examples:
+            self.generate_single_trace(example, trace_name)
+            
+    def get_traces(self, name="rag", limit=None, user_id=None):
+        all_data = []
+        page = 1
+
+        while True:
+            response = self.langfuse.client.trace.list(
+                name=name, page=page, user_id=user_id
+            )
+            if not response.data:
+                break
+            page += 1
+            all_data.extend(response.data)
+            if limit is not None and len(all_data) > limit:
+                break
+        if limit is None:
+            return all_data
+        return all_data[:limit]
