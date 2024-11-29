@@ -42,6 +42,7 @@ def get_available_metrics():
         "context_precision": context_precision,
     }
     
+    #metrics["faithfulness"].statement_prompt = CUSTOM_LONG_FORM_ANSWER_PROMPT
     return metrics
 
 class RagasEvaluation:
@@ -52,6 +53,33 @@ class RagasEvaluation:
         if self.test_config["eval_llm"].get("provider") is not None:
             self.test_config["eval_llm"].pop("provider")
         eval_llm_config = self.test_config["eval_llm"]
+        
+        chat_oci = ChatOCI(
+            temperature=0.1,
+            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
+            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
+            **eval_llm_config,
+        )
+        
+        self.eval_llm = LangchainLLMWrapper(chat_oci)
+        if (
+            self.test_config.get("embeddings") is None
+            or self.test_config["embeddings"].get("model_id") is None
+        ):
+            self.embed_model_id = default_config["embeddings"]["model_id"]
+        else:
+            self.embed_model_id = self.test_config["embeddings"]["model_id"]
+        embeddings = OCIGenAIEmbeddings(
+            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
+            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
+            model_id=self.embed_model_id,
+        )
+        self.embedding = LangchainEmbeddingsWrapper(embeddings)
+        self.chain_config = self.overwrite_with_test_config(
+            default_config, self.test_config
+        )
+        self.create_chain(self.chain_config)
+        self.init_ragas_metrics()
         
     def init_ragas_metrics(self):
         for metric in self.metrics:
@@ -233,8 +261,8 @@ class RagasEvaluation:
                 logger.warning(f"Skipping metric {name} - currently not available")
         return chain_config
 
-    # def create_chain(self, chain_config):
-    #     self.chain = RAGChadChain.from_config(chain_config)
+    def create_chain(self, chain_config):
+        self.chain = RAGChadChain.from_config(chain_config)
 
     def run_experiment(self, generate_traces: bool = True, trace_name: str = "rag"):
         if generate_traces:
