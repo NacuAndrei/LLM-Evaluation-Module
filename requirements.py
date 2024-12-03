@@ -3,7 +3,7 @@ PACKAGES = [
     "ruamel.yaml==0.18.6",
     "datasets==3.0.1",
 
-    "ragas==0.1.21"
+    "ragas==0.1.21",
     
     "langchain==0.2.14",
     "langchainhub==0.1.18",
@@ -26,7 +26,7 @@ PACKAGES = [
     "pdf2image==1.17.0",
     "pypdf==4.2.0",
     "qrcode==7.4.2",
-    "pycocotools==2.0.7",
+    #"pycocotools==2.0.7",
     "opencv-python-headless==4.9.0.80",
     "oci==2.131.1",
     "pillow-heif==0.16.0",
