@@ -2,3 +2,6 @@
 llm_eval_module.egg-info/
 .env
 __pycache__
+data
+eval_source
+results
