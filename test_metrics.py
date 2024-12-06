@@ -20,8 +20,10 @@ from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas import evaluate
+#from langchain.document_loaders import DirectoryLoader, TextLoader
 
 load_dotenv()
+# os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', 'your-key-if-not-using-env')
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 EVAL_DATASET_PATH = os.path.join(os.path.dirname(__file__), f"data/{os.environ.get('DATASET_FILENAME')}")
@@ -42,11 +44,34 @@ class RagasEvaluator:
         eval_llm = ChatOpenAI(model=self.config["eval_llm"]["model"])
         self.eval_llm = LangchainLLMWrapper(self.initialize_gpt4(eval_llm))
 
-        self.create_chain(self.config)
+        # self.create_chain(self.config)
+        
+        #-----CREATE CHROMA VECTORSTORE-----
+        # if os.path.exists(db_name):
+        # Chroma(persist_directory=db_name, embedding_function=embeddings).delete_collection()
+
+        # # Create vectorstore
+
+        # vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings, persist_directory=db_name)
+        # print(f"Vectorstore created with {vectorstore._collection.count()} documents")
+        
+        #------CREATE CHAIN----
+        # llm = ChatOpenAI(temperature=0.7, model_name=MODEL)
+
+        # # set up the conversation memory for the chat
+        # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
+
+        # # the retriever is an abstraction over the VectorStore that will be used during RAG
+        # retriever = vectorstore.as_retriever()
+
+        # # putting it together: set up the conversation chain with the GPT 3.5 LLM, the vector store and memory
+        # conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory)
+        
         self.init_ragas_metrics()
     
-    def initialize_metrics(self) -> List:
-        return [faithfulness, answer_similarity, context_precision]
+    #----Not necessary if we are using the metrics from the config.yml----   
+    # def initialize_metrics(self) -> List:
+    #     return [faithfulness, answer_similarity, context_precision]
       
     def initialize_gpt4(self, config):
         return {
@@ -70,6 +95,8 @@ class RagasEvaluator:
         return all_examples
     
     def get_chunks_from_chain(self, response):
+        # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        # chunks = text_splitter.split_documents(documents)
         chunks = response["sources"].split("\n\n\n")[1:]
         for idx, chunk in enumerate(chunks):
             chunks[idx] = chunk.split("is below.\n")[1]
@@ -123,6 +150,24 @@ class RagasEvaluator:
         # Ingest relevant documents for questions
         # self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
 
+        #-----USE LANGCHAIN READER TO LOAD THE DOCUMENTS-----
+        # # Take everything in all the sub-folders of our knowledgebase
+        
+        # folders = glob.glob("knowledge-base/*")
+
+        # text_loader_kwargs = {'encoding': 'utf-8'}
+        # # If that doesn't work, some Windows users might need to uncomment the next line instead
+        # # text_loader_kwargs={'autodetect_encoding': True}
+
+        # documents = []
+        # for folder in folders:
+        #     doc_type = os.path.basename(folder)
+        #     loader = DirectoryLoader(folder, glob="**/*.md", loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
+        #     folder_docs = loader.load()
+        #     for doc in folder_docs:
+        #         doc.metadata["doc_type"] = doc_type
+        #     documents.append(doc)
+        
         self.incomplete_examples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
 
         for incomplete_example in self.incomplete_examples:
