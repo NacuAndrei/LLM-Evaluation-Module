@@ -11,6 +11,8 @@ from ruamel.yaml import YAML
 from datasets import Dataset
 from langchain_community.embeddings import OCIGenAIEmbeddings
 
+import openai
+
 from ragas.metrics import faithfulness, answer_similarity, context_precision
 from ragas.run_config import RunConfig
 from ragas.llms import LangchainLLMWrapper
@@ -21,9 +23,9 @@ from ragas import evaluate
 from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 
 load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 EVAL_DATASET_PATH = os.path.join(os.path.dirname(__file__), f"data/{os.environ.get('DATASET_FILENAME')}")
-
 CHUNK_SIZES = {"small": 300, "medium": 650, "large": 1000}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -32,14 +34,10 @@ logger = logging.getLogger(__name__)
 class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
+        self.metrics = self.initialize_metrics()
         eval_llm_config = self.config["eval_llm"]
 
-        chat_oci = ChatOCIGenAI(
-            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
-            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
-            **eval_llm_config,
-        )
-        self.eval_llm = LangchainLLMWrapper(chat_oci)
+        self.eval_llm = LangchainLLMWrapper(self.initialize_gpt4(eval_llm_config))
         
         if (
             self.config.get("embeddings") is None
@@ -48,17 +46,22 @@ class RagasEvaluator:
             self.embed_model_id = config["embeddings"]["model_id"]
         else:
             self.embed_model_id = self.config["embeddings"]["model_id"]
-        embeddings = OCIGenAIEmbeddings(
-            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
-            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
-            model_id=self.embed_model_id,
-        )
 
-        self.embedding = LangchainEmbeddingsWrapper(embeddings)
+        self.embedding = LangchainEmbeddingsWrapper(self.embed_model_id)
 
         self.create_chain(self.config)
         self.init_ragas_metrics()
-        
+    
+    def initialize_metrics(self) -> List:
+        return [faithfulness, answer_similarity, context_precision]
+      
+    def initialize_gpt4(self, config):
+        return {
+            "model": "gpt-4",
+            "temperature": config.get("temperature", 0.7),
+            "max_tokens": config.get("max_tokens", 150)
+        }
+    
     def init_ragas_metrics(self):
         for metric in self.metrics:
             if isinstance(metric, MetricWithLLM):
@@ -98,11 +101,19 @@ class RagasEvaluator:
             logger.info(f"{m.name} score: {scores[m.name]}")
         return scores
     
+    def invoke_gpt4(self, prompt):
+        response = openai.Completion.create(
+            model="gpt-4",
+            prompt=prompt,
+            max_tokens=150
+        )
+        return response.choices[0].text.strip()
+    
     def get_complete_example(self, example: Dict[str, Any]):
         question = example["question"]
         prompt = f"Please formulate the answer for the following question in one or multiple sentences. This is the question: {question}"
 
-        response = self.chain.invoke(prompt)      
+        response = self.invoke_gpt4(prompt)      
         
         model_answer = self.get_response_from_chain(response)
         example["model_answer"] = model_answer
@@ -156,9 +167,18 @@ class RagasEvaluator:
         self.write_results_to_excel(results=r)
      
     def create_chain(self, chain_config):
-        # Replace RAGChadChain with a generic chain implementation
-        self.chain = GenericChain.from_config(chain_config)
-        
+        self.chain = []
+        if "steps" in chain_config:
+            for step in chain_config["steps"]:
+                self.chain.append(step)
+                logging.info(f"Step added to chain: {step}")
+                
+    def execute_chain(self):
+        if self.chain:
+            for step in self.chain:
+                logging.info(f"Executing step: {step}")
+                print(f"Executing: {step}")
+  
 class TestRagas(unittest.TestCase):
 
     yaml_config_file = YAML(typ="safe")
@@ -171,4 +191,6 @@ class TestRagas(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(exit=False)
+    config = {"steps": ["step1", "step2", "step3"]}
+    evaluator = RagasEvaluator(config)
+    evaluator.execute_chain()

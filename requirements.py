@@ -28,6 +28,7 @@ PACKAGES = [
     "qrcode==7.4.2",
     #"pycocotools==2.0.7",
     "opencv-python-headless==4.9.0.80",
+    "openai==1.56.2",
     "oci==2.131.1",
     "pillow-heif==0.16.0",
     "markdown==3.6",
