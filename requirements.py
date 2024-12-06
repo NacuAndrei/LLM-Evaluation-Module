@@ -47,5 +47,5 @@ PACKAGES = [
     
     "torch==2.3.1",
     "transformers==4.41.2",
-    "huggingface_hub==0.24.7",
+    "huggingface_hub==0.24.7"
 ]

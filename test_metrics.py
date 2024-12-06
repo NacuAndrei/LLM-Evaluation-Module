@@ -9,7 +9,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
-from langchain_community.embeddings import OCIGenAIEmbeddings
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 
 import openai
 
@@ -19,8 +20,6 @@ from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas import evaluate
-
-from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -35,19 +34,13 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         self.metrics = self.initialize_metrics()
-        eval_llm_config = self.config["eval_llm"]
-
-        self.eval_llm = LangchainLLMWrapper(self.initialize_gpt4(eval_llm_config))
         
-        if (
-            self.config.get("embeddings") is None
-            or self.config["embeddings"].get("model_id") is None
-        ):
-            self.embed_model_id = config["embeddings"]["model_id"]
-        else:
-            self.embed_model_id = self.config["embeddings"]["model_id"]
+        # embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
+        embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
+        self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
-        self.embedding = LangchainEmbeddingsWrapper(self.embed_model_id)
+        eval_llm = ChatOpenAI(model=self.config["eval_llm"]["model"])
+        self.eval_llm = LangchainLLMWrapper(self.initialize_gpt4(eval_llm))
 
         self.create_chain(self.config)
         self.init_ragas_metrics()
@@ -128,7 +121,7 @@ class RagasEvaluator:
         }
 
         # Ingest relevant documents for questions
-        self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
+        # self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
 
         self.incomplete_examples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
 
