@@ -9,10 +9,10 @@ import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
-from langchain_community.embeddings.openai import OpenAIEmbeddings
-from langchain_openai import ChatOpenAI
 
-import openai
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain.chains.combine_documents.stuff import StuffDocumentsChain
+from langchain_community.llms import OpenAIChat
 
 from ragas.metrics import faithfulness, answer_similarity, context_precision
 from ragas.run_config import RunConfig
@@ -20,13 +20,13 @@ from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas import evaluate
-#from langchain.document_loaders import DirectoryLoader, TextLoader
+from langchain_core.output_parsers import StrOutputParser
+
+from custom_ragas_metric_prompt import CUSTOM_LONG_FORM_ANSWER_PROMPT
 
 load_dotenv()
-# os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', 'your-key-if-not-using-env')
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
-EVAL_DATASET_PATH = os.path.join(os.path.dirname(__file__), f"data/{os.environ.get('DATASET_FILENAME')}")
+EVAL_DATASET_PATH = os.environ.get('DATASET_FILENAME')
 CHUNK_SIZES = {"small": 300, "medium": 650, "large": 1000}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -35,55 +35,37 @@ logger = logging.getLogger(__name__)
 class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
-        self.metrics = self.initialize_metrics()
         
-        # embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
+        embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
         embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
-        eval_llm = ChatOpenAI(model=self.config["eval_llm"]["model"])
-        self.eval_llm = LangchainLLMWrapper(self.initialize_gpt4(eval_llm))
+        llm = OpenAIChat(model=self.config["eval_llm"]["model"])
+        self.llm = LangchainLLMWrapper(llm)        
 
-        # self.create_chain(self.config)
-        
-        #-----CREATE CHROMA VECTORSTORE-----
-        # if os.path.exists(db_name):
-        # Chroma(persist_directory=db_name, embedding_function=embeddings).delete_collection()
-
-        # # Create vectorstore
-
-        # vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings, persist_directory=db_name)
-        # print(f"Vectorstore created with {vectorstore._collection.count()} documents")
-        
-        #------CREATE CHAIN----
-        # llm = ChatOpenAI(temperature=0.7, model_name=MODEL)
-
-        # # set up the conversation memory for the chat
-        # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
-
-        # # the retriever is an abstraction over the VectorStore that will be used during RAG
-        # retriever = vectorstore.as_retriever()
-
-        # # putting it together: set up the conversation chain with the GPT 3.5 LLM, the vector store and memory
-        # conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory)
-        
         self.init_ragas_metrics()
     
-    #----Not necessary if we are using the metrics from the config.yml----   
-    # def initialize_metrics(self) -> List:
-    #     return [faithfulness, answer_similarity, context_precision]
-      
-    def initialize_gpt4(self, config):
-        return {
-            "model": "gpt-4",
-            "temperature": config.get("temperature", 0.7),
-            "max_tokens": config.get("max_tokens", 150)
+    def get_available_metrics(self):
+        metrics = {
+            "faithfulness": faithfulness,
+            "answer_similarity": answer_similarity,
+            "context_precision": context_precision,
         }
-    
+        metrics["faithfulness"].statement_prompt = CUSTOM_LONG_FORM_ANSWER_PROMPT
+        return metrics
+
     def init_ragas_metrics(self):
+        available_metrics = self.get_available_metrics()
+        self.metrics = []
+        for name in self.config["test"]["metrics"]:
+            try:
+                self.metrics += [available_metrics[name]]
+            except AttributeError:
+                logger.warning(f"Skipping metric {name} - currently not available")
+
         for metric in self.metrics:
             if isinstance(metric, MetricWithLLM):
-                metric.llm = self.eval_llm
+                metric.llm = self.llm
             if isinstance(metric, MetricWithEmbeddings):
                 metric.embeddings = self.embedding
             run_config = RunConfig()
@@ -103,9 +85,6 @@ class RagasEvaluator:
         logger.debug(f"Contexts: \n {chunks}")
         return chunks
 
-    def get_response_from_chain(self, response):
-        return response["answer"]
-    
     def score_with_ragas(self, query: str, ground_truth: str, chunks: List[str], answer: str):
         scores = {}
         for m in self.metrics:
@@ -121,22 +100,14 @@ class RagasEvaluator:
             logger.info(f"{m.name} score: {scores[m.name]}")
         return scores
     
-    def invoke_gpt4(self, prompt):
-        response = openai.Completion.create(
-            model="gpt-4",
-            prompt=prompt,
-            max_tokens=150
-        )
-        return response.choices[0].text.strip()
-    
     def get_complete_example(self, example: Dict[str, Any]):
         question = example["question"]
         prompt = f"Please formulate the answer for the following question in one or multiple sentences. This is the question: {question}"
 
-        response = self.invoke_gpt4(prompt)      
+        self.chain = prompt | self.llm | StrOutputParser()
+        response = self.chain.invoke(prompt)
         
-        model_answer = self.get_response_from_chain(response)
-        example["model_answer"] = model_answer
+        example["model_answer"] = response["response"]                
 
         return example
 
@@ -204,19 +175,6 @@ class RagasEvaluator:
         logger.info(f"Final scores {r}")
         self.write_results_to_excel(results=r)
      
-    def create_chain(self, chain_config):
-        self.chain = []
-        if "steps" in chain_config:
-            for step in chain_config["steps"]:
-                self.chain.append(step)
-                logging.info(f"Step added to chain: {step}")
-                
-    def execute_chain(self):
-        if self.chain:
-            for step in self.chain:
-                logging.info(f"Executing step: {step}")
-                print(f"Executing: {step}")
-  
 class TestRagas(unittest.TestCase):
 
     yaml_config_file = YAML(typ="safe")
@@ -229,6 +187,4 @@ class TestRagas(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    config = {"steps": ["step1", "step2", "step3"]}
-    evaluator = RagasEvaluator(config)
-    evaluator.execute_chain()
+    unittest.main(exit=False)
