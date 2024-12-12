@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import logging
+import openai
 from typing import List, Dict, Any
 import unittest
 import pandas as pd
@@ -36,6 +37,7 @@ from langchain_core.runnables import RunnablePassthrough
 load_dotenv()
 
 EVAL_DATASET_PATH = os.environ.get('DATASET_FILENAME')
+print(EVAL_DATASET_PATH)
 CHUNK_SIZES = {"small": 300, "medium": 650, "large": 1000}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -48,7 +50,7 @@ class RagasEvaluator:
         embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
                 
-        self.llm_to_be_evaluated = OpenAIChat(model=self.config["eval_llm"]["model"])            
+        self.llm_to_be_evaluated = self.create_llm(self.config["eval_llm"]["model"])            
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
         prompt = hub.pull("rlm/rag-prompt")
@@ -76,6 +78,15 @@ class RagasEvaluator:
         self.llm = LangchainLLMWrapper(self.llm_to_be_evaluated)
         self.init_ragas_metrics()
 
+    def create_llm(self, model_name: str):
+        """
+        Create the LLM using the updated OpenAI.Chat API.
+        """
+        return lambda messages: openai.chat.completions.create(
+            model=model_name,
+            messages=messages
+    )
+        
     def format_docs(self, docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
@@ -111,27 +122,6 @@ class RagasEvaluator:
             "ground_truth": [],
             "model_answer": []
         }
-
-        # Ingest relevant documents for questions
-        # self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
-
-        #-----USE LANGCHAIN READER TO LOAD THE DOCUMENTS-----
-        # # Take everything in all the sub-folders of our knowledgebase
-        
-        # folders = glob.glob("knowledge-base/*")
-
-        # text_loader_kwargs = {'encoding': 'utf-8'}
-        # # If that doesn't work, some Windows users might need to uncomment the next line instead
-        # # text_loader_kwargs={'autodetect_encoding': True}
-
-        # documents = []
-        # for folder in folders:
-        #     doc_type = os.path.basename(folder)
-        #     loader = DirectoryLoader(folder, glob="**/*.md", loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
-        #     folder_docs = loader.load()
-        #     for doc in folder_docs:
-        #         doc.metadata["doc_type"] = doc_type
-        #     documents.append(doc)
         
         self.incomplete_samples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
 
@@ -181,4 +171,6 @@ class TestRagas(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(exit=False)
+    # unittest.main(exit=False)
+    dataset = RagasEvaluator(config=TestRagas.config).load_dataset(absolute_path=EVAL_DATASET_PATH)
+    print(dataset)
