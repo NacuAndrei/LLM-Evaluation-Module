@@ -13,6 +13,8 @@ PACKAGES = [
     "langchain-community",
     "langchain-openai",
     "langchain-cohere",
+
+    "openpyxl"
     
     # "langchain==0.2.14",
     # "langchainhub==0.1.18",

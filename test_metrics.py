@@ -24,8 +24,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 #LLM To be Evaluated
-from langchain_community.llms import OpenAIChat
-#from langchain_openai.chat_models import ChatOpenAI
+from langchain_openai.chat_models import ChatOpenAI
 
 #Temporary
 from langchain import hub
@@ -49,8 +48,6 @@ class RagasEvaluator:
         
         embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
-                
-        self.llm_to_be_evaluated = self.create_llm(self.config["eval_llm"]["model"])            
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
         prompt = hub.pull("rlm/rag-prompt")
@@ -63,7 +60,12 @@ class RagasEvaluator:
         all_splits = text_splitter.split_documents(data)
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
 
-        #llm_to_be_evaluated Chain Creation
+        #llm_to_be_evaluated
+        self.llm_to_be_evaluated = ChatOpenAI(
+            temperature=self.config["llm_to_be_evaluated"]["temperature"],
+            model_name=self.config["llm_to_be_evaluated"]["model"]
+        )        
+        
         self.chain = (
             {
                 "context": vectorstore.as_retriever() | self.format_docs,
@@ -75,18 +77,14 @@ class RagasEvaluator:
         )
 
         #Ragas LLM
-        self.llm = LangchainLLMWrapper(self.llm_to_be_evaluated)
+        self.ragas_helper_llm = ChatOpenAI(
+            temperature=self.config["ragas_helper_llm"]["temperature"],
+            model_name=self.config["ragas_helper_llm"]["model"]
+        )
+
+        self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
         self.init_ragas_metrics()
 
-    def create_llm(self, model_name: str):
-        """
-        Create the LLM using the updated OpenAI.Chat API.
-        """
-        return lambda messages: openai.chat.completions.create(
-            model=model_name,
-            messages=messages
-    )
-        
     def format_docs(self, docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
@@ -110,9 +108,9 @@ class RagasEvaluator:
         question = sample["question"]
         prompt = f"Please formulate the answer for the following question in one or multiple sentences. This is the question: {question}"
 
-        response = self.chain.invoke(prompt) #TODO 1 find a working pair of versions for Ragas & OpenAI (Ragas 0.2.7 calls openai.ChatCompletion, but this is no longer supported in openai>=1.0.0; but ragas 0.2.7 depends on openai>1; ???)
+        response = self.chain.invoke(prompt)
         
-        sample["model_answer"] = response["response"]                
+        sample["response"] = response
 
         return sample
 
@@ -120,7 +118,7 @@ class RagasEvaluator:
         evaluation_batch = {
             "question": [],
             "ground_truth": [],
-            "model_answer": []
+            "response": []
         }
         
         self.incomplete_samples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
@@ -130,27 +128,32 @@ class RagasEvaluator:
 
             evaluation_batch["question"].append(complete_sample["question"])
             evaluation_batch["ground_truth"].append(complete_sample["ground_truth"])
-            evaluation_batch["model_answer"].append(complete_sample["model_answer"])
+            evaluation_batch["response"].append(complete_sample["response"])
 
         return evaluation_batch
     
     def write_results_to_excel(self, results):
         new_data = {
-            "Doc format": [self.config["test"]["doc_format"]],
-            "# QA GT": [len(self.all_samples)],
-            "top_k": [self.chain_config["retriever"]["search_kwargs"]["k"]],
-            "chunk_size": [CHUNK_SIZES[self.chain_config["ingestion"]["chunk_size"]]],
-            "chunk_overlap": [self.chain_config["ingestion"]["overlap"]],
-            "embed_model": [self.embed_model_id],
-            "llm": [self.chain_config["llm"]["model_id"]],
-            "eval llm": [self.config["eval_llm"]["model_id"]],
+            "Doc Format": [self.config["test"]["doc_format"]],
+            "Number of Questions": [len(self.incomplete_samples)],
+            # "top_k": [self.chain_config["retriever"]["search_kwargs"]["k"]],
+            # "chunk_size": [CHUNK_SIZES[self.chain_config["ingestion"]["chunk_size"]]],
+            # "chunk_overlap": [self.chain_config["ingestion"]["overlap"]],
+            "Embeddings Model": [self.config["embeddings"]["model"]],
+            "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
+            "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
+        #TODO CRAPA cu mai mult de 1 intrebare
         df_new = pd.DataFrame(new_data)
-        df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
-        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-        df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        #TODO create file if it does not exist
+        #TODO decide what do we store in it (average score vs score and text for each question)
+        # df_empty.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        # df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
+        # df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+        # df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        df_new.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
         
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()

@@ -1,5 +1,10 @@
-eval_llm:
-  model: 'gpt-4o'
+llm_to_be_evaluated:
+  model: 'gpt-4o-mini'
+  max_tokens: 100
+  temperature: 0.0
+
+ragas_helper_llm:
+  model: 'gpt-4o-mini'
   max_tokens: 100
   temperature: 0.0
 
