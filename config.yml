@@ -1,5 +1,5 @@
 llm_to_be_evaluated:
-  model: 'gpt-4o-mini'
+  model: 'llama3'
   max_tokens: 100
   temperature: 0.0
 

@@ -20,11 +20,14 @@ from ragas import evaluate
 
 #Embeddings & VectorStore
 from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 #LLM To be Evaluated
 from langchain_openai.chat_models import ChatOpenAI
+from langchain_ollama import ChatOllama
+
 
 #Temporary
 from langchain import hub
@@ -46,7 +49,7 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         
-        embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
+        embeddings = OllamaEmbeddings(model=self.config["embeddings"]["model"]) #OpenAIEmbeddings()
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
@@ -61,9 +64,9 @@ class RagasEvaluator:
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
 
         #llm_to_be_evaluated
-        self.llm_to_be_evaluated = ChatOpenAI(
-            temperature=self.config["llm_to_be_evaluated"]["temperature"],
-            model_name=self.config["llm_to_be_evaluated"]["model"]
+        self.llm_to_be_evaluated = ChatOllama( #ChatOpenAI(
+            model=self.config["llm_to_be_evaluated"]["model"],
+            temperature=self.config["llm_to_be_evaluated"]["temperature"]
         )        
         
         self.chain = (
@@ -78,8 +81,8 @@ class RagasEvaluator:
 
         #Ragas LLM
         self.ragas_helper_llm = ChatOpenAI(
-            temperature=self.config["ragas_helper_llm"]["temperature"],
-            model_name=self.config["ragas_helper_llm"]["model"]
+            model=self.config["ragas_helper_llm"]["model"],
+            temperature=self.config["ragas_helper_llm"]["temperature"]
         )
 
         self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
