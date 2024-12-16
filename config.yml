@@ -1,0 +1,17 @@
+llm_to_be_evaluated:
+  model: 'gpt-4o-mini'
+  max_tokens: 100
+  temperature: 0.0
+
+ragas_helper_llm:
+  model: 'gpt-4o-mini'
+  max_tokens: 100
+  temperature: 0.0
+
+embeddings:
+  model: 'text-embedding-3-small'
+  max_tokens: 100
+
+test:
+  metrics: [faithfulness, answer_similarity, context_precision]
+  doc_format: pdf  # use 'mixed' if there are multiple formats

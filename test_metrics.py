@@ -1,28 +1,43 @@
+#General
 import os
 import sys
 import json
 import logging
+import openai
 from typing import List, Dict, Any
-
 import unittest
 import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
-from langchain_community.embeddings import OCIGenAIEmbeddings
 
-from ragas.metrics import faithfulness, answer_similarity, context_precision
+#Ragas
+from ragas.metrics import FactualCorrectness
 from ragas.run_config import RunConfig
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
-from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
 from ragas import evaluate
 
-from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
+#Embeddings & VectorStore
+from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+#LLM To be Evaluated
+from langchain_openai.chat_models import ChatOpenAI
+
+#Temporary
+from langchain import hub
+from langchain_community.document_loaders import WebBaseLoader
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 
 load_dotenv()
 
-EVAL_DATASET_PATH = os.path.join(os.path.dirname(__file__), f"data/{os.environ.get('DATASET_FILENAME')}")
+EVAL_DATASET_PATH = os.environ.get('DATASET_FILENAME')
+print(EVAL_DATASET_PATH)
+CHUNK_SIZES = {"small": 300, "medium": 650, "large": 1000}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -30,121 +45,112 @@ logger = logging.getLogger(__name__)
 class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
-        eval_llm_config = self.config["eval_llm"]
-
-        chat_oci = ChatOCIGenAI(
-            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
-            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
-            **eval_llm_config,
-        )
-        self.eval_llm = LangchainLLMWrapper(chat_oci)
         
-        if (
-            self.config.get("embeddings") is None
-            or self.config["embeddings"].get("model_id") is None
-        ):
-            self.embed_model_id = config["embeddings"]["model_id"]
-        else:
-            self.embed_model_id = self.config["embeddings"]["model_id"]
-        embeddings = OCIGenAIEmbeddings(
-            service_endpoint=os.environ["OCI_SERVICE_ENDPOINT"],
-            compartment_id=os.environ["OCI_COMPARTMENT_ID"],
-            model_id=self.embed_model_id,
-        )
-
+        embeddings = OpenAIEmbeddings(model=self.config["embeddings"]["model"])
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
-        self.create_chain(self.config)
-        self.init_ragas_metrics()
+        # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
+        prompt = hub.pull("rlm/rag-prompt")
+
+        loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
+        data = loader.load()
+
+        # Split text in chunks and store it in FAISS vectorstore
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
+        all_splits = text_splitter.split_documents(data)
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
+
+        #llm_to_be_evaluated
+        self.llm_to_be_evaluated = ChatOpenAI(
+            temperature=self.config["llm_to_be_evaluated"]["temperature"],
+            model_name=self.config["llm_to_be_evaluated"]["model"]
+        )        
         
+        self.chain = (
+            {
+                "context": vectorstore.as_retriever() | self.format_docs,
+                "question": RunnablePassthrough(),
+            }
+            | prompt
+            | self.llm_to_be_evaluated
+            | StrOutputParser()
+        )
+
+        #Ragas LLM
+        self.ragas_helper_llm = ChatOpenAI(
+            temperature=self.config["ragas_helper_llm"]["temperature"],
+            model_name=self.config["ragas_helper_llm"]["model"]
+        )
+
+        self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
+        self.init_ragas_metrics()
+
+    def format_docs(self, docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
     def init_ragas_metrics(self):
-        for metric in self.metrics:
-            if isinstance(metric, MetricWithLLM):
-                metric.llm = self.eval_llm
-            if isinstance(metric, MetricWithEmbeddings):
-                metric.embeddings = self.embedding
-            run_config = RunConfig()
-            metric.init(run_config)
+        self.metrics = []
+
+        metric = FactualCorrectness()
+        metric.llm = self.llm
+
+        run_config = RunConfig()
+        metric.init(run_config)
+
+        self.metrics += [metric]
             
     def load_dataset(self, absolute_path: str):
         with open(absolute_path, "r") as json_file:
-            all_examples = json.load(json_file)
-        return all_examples
+            all_samples = json.load(json_file)
+        return all_samples
     
-    def get_chunks_from_chain(self, response):
-        chunks = response["sources"].split("\n\n\n")[1:]
-        for idx, chunk in enumerate(chunks):
-            chunks[idx] = chunk.split("is below.\n")[1]
-        logger.debug(f"Contexts: \n {chunks}")
-        return chunks
-
-    def get_response_from_chain(self, response):
-        return response["answer"]
-    
-    def score_with_ragas(self, query: str, ground_truth: str, chunks: List[str], answer: str):
-        scores = {}
-        for m in self.metrics:
-            logger.debug(f"calculating: {m.name}")
-            scores[m.name] = m.score(
-                row={
-                    "question": query,
-                    "ground_truth": ground_truth,
-                    "context": chunks,
-                    "answer": answer,
-                }
-            )
-            logger.info(f"{m.name} score: {scores[m.name]}")
-        return scores
-    
-    def get_complete_example(self, example: Dict[str, Any]):
-        question = example["question"]
+    def get_complete_sample(self, sample: Dict[str, Any]):
+        question = sample["question"]
         prompt = f"Please formulate the answer for the following question in one or multiple sentences. This is the question: {question}"
 
-        response = self.chain.invoke(prompt)      
+        response = self.chain.invoke(prompt)
         
-        model_answer = self.get_response_from_chain(response)
-        example["model_answer"] = model_answer
+        sample["response"] = response
 
-        return example
+        return sample
 
     def get_evaluation_batch(self):
         evaluation_batch = {
             "question": [],
             "ground_truth": [],
-            "model_answer": []
+            "response": []
         }
+        
+        self.incomplete_samples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
 
-        # Ingest relevant documents for questions
-        self.chain.add_files_to_store(directory=os.environ["EVAL_SOURCE_DOC_DIR"])
+        for incomplete_sample in self.incomplete_samples:
+            complete_sample = self.get_complete_sample(incomplete_sample)
 
-        self.incomplete_examples = self.load_dataset(absolute_path=EVAL_DATASET_PATH)
-
-        for incomplete_example in self.incomplete_examples:
-            complete_example = self.get_complete_example(incomplete_example)
-
-            evaluation_batch["question"].append(complete_example["question"])
-            evaluation_batch["ground_truth"].append(complete_example["ground_truth"])
-            evaluation_batch["model_answer"].append(complete_example["model_answer"])
+            evaluation_batch["question"].append(complete_sample["question"])
+            evaluation_batch["ground_truth"].append(complete_sample["ground_truth"])
+            evaluation_batch["response"].append(complete_sample["response"])
 
         return evaluation_batch
     
     def write_results_to_excel(self, results):
         new_data = {
-            "Doc format": [self.config["test"]["doc_format"]],
-            "# QA GT": [len(self.all_examples)],
-            "top_k": [self.chain_config["retriever"]["search_kwargs"]["k"]],
-            "chunk_size": [CHUNK_SIZES[self.chain_config["ingestion"]["chunk_size"]]],
-            "chunk_overlap": [self.chain_config["ingestion"]["overlap"]],
-            "embed_model": [self.embed_model_id],
-            "llm": [self.chain_config["llm"]["model_id"]],
-            "eval llm": [self.config["eval_llm"]["model_id"]],
+            "Doc Format": [self.config["test"]["doc_format"]],
+            "Number of Questions": [len(self.incomplete_samples)],
+            # "top_k": [self.chain_config["retriever"]["search_kwargs"]["k"]],
+            # "chunk_size": [CHUNK_SIZES[self.chain_config["ingestion"]["chunk_size"]]],
+            # "chunk_overlap": [self.chain_config["ingestion"]["overlap"]],
+            "Embeddings Model": [self.config["embeddings"]["model"]],
+            "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
+            "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
         df_new = pd.DataFrame(new_data)
-        df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
-        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-        df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        # df_empty.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        # df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
+        # df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+        # df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
+        df_new.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
         
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
@@ -153,10 +159,6 @@ class RagasEvaluator:
         logger.info(f"Final scores {r}")
         self.write_results_to_excel(results=r)
      
-    def create_chain(self, chain_config):
-        # Replace RAGChadChain with a generic chain implementation
-        self.chain = GenericChain.from_config(chain_config)
-        
 class TestRagas(unittest.TestCase):
 
     yaml_config_file = YAML(typ="safe")
@@ -169,4 +171,6 @@ class TestRagas(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(exit=False)
+    # unittest.main(exit=False)
+    dataset = RagasEvaluator(config=TestRagas.config).load_dataset(absolute_path=EVAL_DATASET_PATH)
+    print(dataset)
