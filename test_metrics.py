@@ -91,7 +91,7 @@ class RagasEvaluator:
     def init_ragas_metrics(self):
         self.metrics = []
 
-        metric = FactualCorrectness() #TODO 2 Add more metrics
+        metric = FactualCorrectness()
         metric.llm = self.llm
 
         run_config = RunConfig()
@@ -145,10 +145,7 @@ class RagasEvaluator:
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
-        #TODO CRAPA cu mai mult de 1 intrebare
         df_new = pd.DataFrame(new_data)
-        #TODO create file if it does not exist
-        #TODO decide what do we store in it (average score vs score and text for each question)
         # df_empty.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
         # df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
         # df_combined = pd.concat([df_existing, df_new], ignore_index=True)
