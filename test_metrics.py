@@ -136,6 +136,7 @@ class RagasEvaluator:
         return evaluation_batch
     
     def write_results_to_excel(self, results):
+        
         new_data = {
             "Doc Format": [self.config["test"]["doc_format"]],
             "Number of Questions": [len(self.incomplete_samples)],
@@ -145,9 +146,17 @@ class RagasEvaluator:
             "Embeddings Model": [self.config["embeddings"]["model"]],
             "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
             "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
+            "Questions": [sample["question"] for sample in self.incomplete_samples],
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
+            
+        max_length = max(len(lst) for lst in new_data.values())
+    
+        for key in new_data:
+            current_length = len(new_data[key])
+            if current_length < max_length:
+                new_data[key].extend([None] * (max_length - current_length))
             
         df_new = pd.DataFrame(new_data)
         excel_path = os.environ["RESULTS_EXCEL_PATH"]
