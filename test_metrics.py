@@ -148,12 +148,21 @@ class RagasEvaluator:
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
+            
         df_new = pd.DataFrame(new_data)
+        excel_path = os.environ["RESULTS_EXCEL_PATH"]
+        
+        if not os.path.exists(excel_path):
+            df_new.to_excel(excel_path, index=False)
+        else:
+            with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+                startrow = writer.sheets['Sheet1'].max_row if 'Sheet1' in writer.sheets else 0
+                df_new.to_excel(writer, index=False, header=writer.sheets['Sheet1'].max_row == 0, startrow=startrow)
+                
         # df_empty.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
         # df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
         # df_combined = pd.concat([df_existing, df_new], ignore_index=True)
         # df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
-        df_new.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
         
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
