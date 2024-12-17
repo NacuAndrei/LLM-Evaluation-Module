@@ -10,6 +10,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
+from datetime import datetime
 
 #Ragas
 from ragas.metrics import FactualCorrectness
@@ -136,8 +137,8 @@ class RagasEvaluator:
         return evaluation_batch
     
     def write_results_to_excel(self, results):
-        
         new_data = {
+            "Version Number": [datetime.now().strftime("%Y-%m-%dT%H:%M")],
             "Doc Format": [self.config["test"]["doc_format"]],
             "Number of Questions": [len(self.incomplete_samples)],
             # "top_k": [self.chain_config["retriever"]["search_kwargs"]["k"]],
@@ -147,6 +148,7 @@ class RagasEvaluator:
             "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
             "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
             "Questions": [sample["question"] for sample in self.incomplete_samples],
+            "Answers": [sample["response"] for sample in self.incomplete_samples],
         }
         for metric in self.metrics:
             new_data[metric.name] = results[metric.name]
@@ -167,12 +169,7 @@ class RagasEvaluator:
             with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
                 startrow = writer.sheets['Sheet1'].max_row if 'Sheet1' in writer.sheets else 0
                 df_new.to_excel(writer, index=False, header=writer.sheets['Sheet1'].max_row == 0, startrow=startrow)
-                
-        # df_empty.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
-        # df_existing = pd.read_excel(os.environ["RESULTS_EXCEL_PATH"])
-        # df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-        # df_combined.to_excel(os.environ["RESULTS_EXCEL_PATH"], index=False)
-        
+
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
         ds = Dataset.from_dict(evaluation_batch)
