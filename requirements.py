@@ -13,6 +13,7 @@ PACKAGES = [
     "langchain-community",
     "langchain-openai",
     "langchain-cohere",
+    "langchain-ollama",
 
     "openpyxl"
     
