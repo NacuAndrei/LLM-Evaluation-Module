@@ -26,7 +26,7 @@ def get_llm_and_embeddings_config(config: Dict, type = "llm") -> BaseLanguageMod
     relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
     valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
     
-    provider = config[ConfigProps.PROVIDER.value]
+    provider = config.get(ConfigProps.PROVIDER.value)
     
     if type == "llm":
         if provider == LLMProvider.OPENAI.value:

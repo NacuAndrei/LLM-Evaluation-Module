@@ -11,6 +11,7 @@ ragas_helper_llm:
   temperature: 0.0
 
 embeddings:
+  provider: 'openai'
   model: 'text-embedding-3-small'
   max_tokens: 100
 
