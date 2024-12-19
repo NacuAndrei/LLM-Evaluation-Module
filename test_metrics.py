@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
 
-from llm_config import get_llm_config
+from llm_config import get_llm_config, get_embeddings_config
 
 #Ragas
 from ragas.metrics import FactualCorrectness
@@ -51,7 +51,7 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         
-        embeddings = OllamaEmbeddings(model=self.config["embeddings"]["model"]) #OpenAIEmbeddings()
+        embeddings = get_embeddings_config(config["embeddings"])
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
