@@ -6,6 +6,9 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 
+from langchain_openai import OpenAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
+
 class LLMProvider(Enum):
     OPENAI = "openai"
     OLLAMA = "ollama"
@@ -33,5 +36,15 @@ def get_llm_config(config: Dict) -> BaseLanguageModel:
     
     raise ValueError(f"Invalid provider: {provider}")
     
+def get_embeddings_config(config: Dict) -> object:
+    provider = config[ConfigProps.PROVIDER.value]
+
+    if provider == LLMProvider.OPENAI.value:
+        return OpenAIEmbeddings(model=config[ConfigProps.MODEL.value])
+    
+    if provider == LLMProvider.OLLAMA.value:
+        return OllamaEmbeddings(model=config[ConfigProps.MODEL.value])
+
+    raise ValueError(f"Invalid provider: {provider}")
     
     
