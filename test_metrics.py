@@ -63,6 +63,7 @@ class RagasEvaluator:
         all_splits = text_splitter.split_documents(data)
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
 
+        
         #llm_to_be_evaluated
         self.llm_to_be_evaluated = ChatOllama( #ChatOpenAI(
             model=self.config["llm_to_be_evaluated"]["model"],
