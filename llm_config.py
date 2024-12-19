@@ -22,27 +22,28 @@ class ConfigProps(Enum):
     MODEL_ID = "model_id"
     MODEL = "model"
   
-def get_llm_config(config: Dict) -> BaseLanguageModel:
-   
-    provider = config.get("provider") 
-
-    if provider == LLMProvider.OPENAI.value:
-        return ChatOpenAI(model=config['model'], max_tokens=config['max_tokens'], temperature=config['temperature'])
+def get_llm_and_embeddings_config(config: Dict, type = "llm") -> BaseLanguageModel:
+    relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
+    valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
     
-    if provider == LLMProvider.OLLAMA.value:
-        return ChatOllama(model=config['model'], max_tokens=config['max_tokens'], temperature=config['temperature'])
-    
-    raise ValueError(f"Invalid provider: {provider}")
-    
-def get_embeddings_config(config: Dict) -> object:
     provider = config[ConfigProps.PROVIDER.value]
-
-    if provider == LLMProvider.OPENAI.value:
-        return OpenAIEmbeddings(model=config[ConfigProps.MODEL.value])
     
-    if provider == LLMProvider.OLLAMA.value:
-        return OllamaEmbeddings(model=config[ConfigProps.MODEL.value])
+    if type == "llm":
+        if provider == LLMProvider.OPENAI.value:
+            return ChatOpenAI(**valid_config)
+        
+        if provider == LLMProvider.OLLAMA.value:
+            return ChatOllama(**valid_config)
+    
+        raise ValueError(f"Invalid llm: {provider}")
+
+    else:
+        if provider == LLMProvider.OPENAI.value:
+            return OpenAIEmbeddings(**valid_config)
+    
+        if provider == LLMProvider.OLLAMA.value:
+            return OllamaEmbeddings(**valid_config)
 
     raise ValueError(f"Invalid provider: {provider}")
-    
+
     
