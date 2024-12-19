@@ -20,13 +20,16 @@ class ConfigProps(Enum):
     MODEL = "model"
   
 def get_llm_config(config: Dict) -> BaseLanguageModel:
+    relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
+    valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
+    
     provider = config[ConfigProps.PROVIDER.value]
     
     if provider == LLMProvider.OPENAI.value:
-        return ChatOpenAI(**config)
+        return ChatOpenAI(**valid_config)
     
     if provider == LLMProvider.OLLAMA.value:
-        return ChatOpenAI(**config)
+        return ChatOllama(**valid_config)
     
     raise ValueError(f"Invalid provider: {provider}")
     

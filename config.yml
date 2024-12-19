@@ -1,9 +1,11 @@
 llm_to_be_evaluated:
+  provider: 'ollama'
   model: 'llama3'
   max_tokens: 100
   temperature: 0.0
 
 ragas_helper_llm:
+  provider: 'openai'
   model: 'gpt-4o-mini'
   max_tokens: 100
   temperature: 0.0

@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
 
+from llm_config import get_llm_config
+
 #Ragas
 from ragas.metrics import FactualCorrectness
 from ragas.run_config import RunConfig
@@ -58,17 +60,11 @@ class RagasEvaluator:
         loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
         data = loader.load()
 
-        # Split text in chunks and store it in FAISS vectorstore
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         all_splits = text_splitter.split_documents(data)
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
-
-        
-        #llm_to_be_evaluated
-        self.llm_to_be_evaluated = ChatOllama( #ChatOpenAI(
-            model=self.config["llm_to_be_evaluated"]["model"],
-            temperature=self.config["llm_to_be_evaluated"]["temperature"]
-        )        
+     
+        self.llm_to_be_evaluated = get_llm_config(self.config["llm_to_be_evaluated"])
         
         self.chain = (
             {
@@ -80,11 +76,7 @@ class RagasEvaluator:
             | StrOutputParser()
         )
 
-        #Ragas LLM
-        self.ragas_helper_llm = ChatOpenAI(
-            model=self.config["ragas_helper_llm"]["model"],
-            temperature=self.config["ragas_helper_llm"]["temperature"]
-        )
+        self.ragas_helper_llm = get_llm_config(self.config["ragas_helper_llm"])
 
         self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
         self.init_ragas_metrics()
