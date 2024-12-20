@@ -37,13 +37,14 @@ def get_llm_and_embeddings_config(config: Dict, type = "llm") -> BaseLanguageMod
     
         raise ValueError(f"Invalid llm: {provider}")
 
-    else:
+    elif type == "embeddings":
         if provider == LLMProvider.OPENAI.value:
             return OpenAIEmbeddings(**valid_config)
     
         if provider == LLMProvider.OLLAMA.value:
             return OllamaEmbeddings(**valid_config)
 
-    raise ValueError(f"Invalid provider: {provider}")
+    else:
+        raise ValueError(f"Invalid provider: {provider}")
 
     
