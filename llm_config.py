@@ -22,7 +22,7 @@ class ConfigProps(Enum):
     MODEL_ID = "model_id"
     MODEL = "model"
   
-def get_llm_and_embeddings_config(config: Dict, type = "llm") -> BaseLanguageModel:
+def get_llm(config: Dict, type = "llm") -> BaseLanguageModel:
     relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
     valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
     

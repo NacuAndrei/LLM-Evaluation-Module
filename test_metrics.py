@@ -12,7 +12,7 @@ from ruamel.yaml import YAML
 from datasets import Dataset
 from datetime import datetime
 
-from llm_config import get_llm_and_embeddings_config
+from llm_config import get_llm
 
 #Ragas
 from ragas.metrics import FactualCorrectness
@@ -52,7 +52,7 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         
-        embeddings = get_llm_and_embeddings_config(config["embeddings"], type="embedding")
+        embeddings = get_llm(config["embeddings"], type="embeddings")
         self.embedding = LangchainEmbeddingsWrapper(embeddings)
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
@@ -65,7 +65,7 @@ class RagasEvaluator:
         all_splits = text_splitter.split_documents(data)
         vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
      
-        self.llm_to_be_evaluated = get_llm_and_embeddings_config(self.config["llm_to_be_evaluated"])
+        self.llm_to_be_evaluated = get_llm(self.config["llm_to_be_evaluated"])
         
         self.chain = (
             {
@@ -77,7 +77,7 @@ class RagasEvaluator:
             | StrOutputParser()
         )
 
-        self.ragas_helper_llm = get_llm_and_embeddings_config(self.config["ragas_helper_llm"])
+        self.ragas_helper_llm = get_llm(self.config["ragas_helper_llm"])
 
         self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
         self.init_ragas_metrics()
