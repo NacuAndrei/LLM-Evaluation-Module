@@ -3,35 +3,27 @@ import os
 import sys
 import json
 import logging
-import openai
-from typing import List, Dict, Any
+from typing import Dict, Any
 import unittest
-import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
-from datetime import datetime
 
-from llm_config import get_llm
+from llm_provider import get_llm
 from excel_writer import write_results_to_excel
 
 #Ragas
-from ragas.metrics import FactualCorrectness
+from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
+from ragas.metrics import FactualCorrectness, AnswerSimilarity
+
 from ragas.run_config import RunConfig
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas import evaluate
 
 #Embeddings & VectorStore
-from langchain_openai.embeddings import OpenAIEmbeddings
-from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-#LLM To be Evaluated
-from langchain_openai.chat_models import ChatOpenAI
-from langchain_ollama import ChatOllama
-
 
 #Temporary
 from langchain import hub
@@ -53,8 +45,8 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         
-        embeddings = get_llm(config["embeddings"], type="embeddings")
-        self.embedding = LangchainEmbeddingsWrapper(embeddings)
+        embeddings_llm = get_llm(config["embeddings"], type="embeddings")
+        self.embeddings_llm = LangchainEmbeddingsWrapper(embeddings_llm)
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
         prompt = hub.pull("rlm/rag-prompt")
@@ -64,7 +56,7 @@ class RagasEvaluator:
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         all_splits = text_splitter.split_documents(data)
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=self.embeddings_llm)
      
         self.llm_to_be_evaluated = get_llm(self.config["llm_to_be_evaluated"])
         
@@ -79,23 +71,27 @@ class RagasEvaluator:
         )
 
         self.ragas_helper_llm = get_llm(self.config["ragas_helper_llm"])
-
-        self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
+        self.ragas_helper_llm = LangchainLLMWrapper(self.ragas_helper_llm)
         self.init_ragas_metrics()
 
     def format_docs(self, docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
     def init_ragas_metrics(self):
+
         self.metrics = []
-
         metric = FactualCorrectness()
-        metric.llm = self.llm
-
-        run_config = RunConfig()
-        metric.init(run_config)
-
+        # metric = AnswerSimilarity()
         self.metrics += [metric]
+
+        for metric in self.metrics:
+            if isinstance(metric, MetricWithLLM):
+                metric.llm = self.ragas_helper_llm
+            if isinstance(metric, MetricWithEmbeddings):
+                metric.embeddings = self.embeddings_llm
+
+            run_config = RunConfig()
+            metric.init(run_config) 
             
     def load_dataset(self, absolute_path: str):
         with open(absolute_path, "r") as json_file:

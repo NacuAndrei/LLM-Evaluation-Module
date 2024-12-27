@@ -9,11 +9,11 @@ from langchain_ollama import ChatOllama
 from langchain_openai import OpenAIEmbeddings
 from langchain_ollama import OllamaEmbeddings
 
-class LLMProvider(Enum):
+class LLM_Names(Enum):
     OPENAI = "openai"
     OLLAMA = "ollama"
     
-class LLMID(Enum):
+class LLM_IDs(Enum):
     OPENAI_GPT_4o_MINI = "gpt-4o-mini"
     OLLAMA_LLAMA_3 = "llama3"
   
@@ -29,19 +29,19 @@ def get_llm(config: Dict, type = "llm") -> BaseLanguageModel:
     provider = config.get(ConfigProps.PROVIDER.value)
     
     if type == "llm":
-        if provider == LLMProvider.OPENAI.value:
+        if provider == LLM_Names.OPENAI.value:
             return ChatOpenAI(**valid_config)
         
-        if provider == LLMProvider.OLLAMA.value:
+        if provider == LLM_Names.OLLAMA.value:
             return ChatOllama(**valid_config)
     
         raise ValueError(f"Invalid llm: {provider}")
 
     elif type == "embeddings":
-        if provider == LLMProvider.OPENAI.value:
+        if provider == LLM_Names.OPENAI.value:
             return OpenAIEmbeddings(**valid_config)
     
-        if provider == LLMProvider.OLLAMA.value:
+        if provider == LLM_Names.OLLAMA.value:
             return OllamaEmbeddings(**valid_config)
 
     else:
