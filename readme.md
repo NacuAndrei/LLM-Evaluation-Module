@@ -4,7 +4,6 @@ Make sure you have at least Python version 3.12.4
 python -m venv .venv
 .venv/Scripts/activate
 
-
 \.venv\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
 
 pip install -e .
@@ -14,4 +13,4 @@ Steps to use Ollama (local models - Llama 3.3, Phi 3, Mistral, Gemma 2 etc.):
 - Restart VS Code
 - Download llama3 locally by typing the below command in the terminal:
 ollama run llama3
-- You can verify it by asking questions in the terminal
+- You can verify it by asking questions in the terminal and Ctrl+D to exit

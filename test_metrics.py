@@ -13,6 +13,7 @@ from datasets import Dataset
 from datetime import datetime
 
 from llm_config import get_llm
+from excel_writer import write_results_to_excel
 
 #Ragas
 from ragas.metrics import FactualCorrectness
@@ -129,74 +130,12 @@ class RagasEvaluator:
 
         return evaluation_batch
     
-    def write_results_to_excel(self, results):
-        question_list, answer_list = self.extract_questions_and_answers()
-        new_data = self.prepare_new_data(question_list, answer_list, results)
-        df_new = self.create_dataframe(new_data)
-        excel_path = os.environ["RESULTS_EXCEL_PATH"]
-        self.save_to_excel(df_new, excel_path)
-
-    def extract_questions_and_answers(self):
-        question_list = [sample["question"] for sample in self.incomplete_samples]
-        answer_list = [sample["response"] for sample in self.incomplete_samples]
-        return question_list, answer_list
-
-    def prepare_new_data(self, question_list, answer_list, results):
-        version_number = datetime.now().strftime("%Y-%m-%dT%H:%M")
-        new_data = {
-            "Version Number": [version_number],
-            "Question Source": [EVAL_DATASET_PATH],
-            "Doc Format": [self.config["test"]["doc_format"]],
-            "Number of Questions": [len(self.incomplete_samples)],
-            "Embeddings Model": [self.config["embeddings"]["model"]],
-            "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
-            "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
-            "Question Number": list(range(1, len(question_list) + 1)),
-            "Questions": question_list,
-            "Answers": answer_list,
-        }
-        
-        for metric in self.metrics:
-            new_data[metric.name] = results[metric.name]
-            
-        self.normalize_data_length(new_data)
-        
-        return new_data
-
-    def normalize_data_length(self, new_data):
-        max_length = max(len(lst) for lst in new_data.values())
-        for key in new_data:
-            current_length = len(new_data[key])
-            if current_length < max_length:
-                new_data[key].extend([None] * (max_length - current_length))
-
-    def create_dataframe(self, new_data):
-        df_new = pd.DataFrame(new_data)
-        averages = {metric.name: df_new[metric.name].mean() for metric in self.metrics}
-        average_row = {col: None for col in df_new.columns}
-        average_row.update(averages)
-        average_row["Version Number"] = "Average"
-        df_average = pd.DataFrame([average_row])
-        df_new = pd.concat([df_new, df_average], ignore_index=True)
-        empty_row = {col: '__________' for col in df_new.columns}
-        df_empty = pd.DataFrame([empty_row])
-        df_new = pd.concat([df_new, df_empty], ignore_index=True)
-        return df_new
-
-    def save_to_excel(self, df_new, excel_path):
-        if not os.path.exists(excel_path):
-            df_new.to_excel(excel_path, index=False)
-        else:
-            with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
-                startrow = writer.sheets['Sheet1'].max_row if 'Sheet1' in writer.sheets else 0
-                df_new.to_excel(writer, index=False, header=writer.sheets['Sheet1'].max_row == 0, startrow=startrow)
-
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
         ds = Dataset.from_dict(evaluation_batch)
-        r = evaluate(ds, metrics=self.metrics)
-        logger.info(f"Final scores {r}")
-        self.write_results_to_excel(results=r)
+        results = evaluate(ds, metrics=self.metrics)
+        logger.info(f"Final scores {results}")
+        write_results_to_excel(results, self.metrics, self.config)
      
 class TestRagas(unittest.TestCase):
 
