@@ -61,6 +61,6 @@ class RagasEvaluator:
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
         ds = Dataset.from_dict(evaluation_batch)
-        results = evaluate(ds, metrics=self.metrics)
+        results = evaluate(ds, metrics=self.metrics) #Should we give the llm and embeddings as arguments?
         logger.info(f"Final scores {results}")
         write_results_to_excel(results, self.metrics, self.config)
