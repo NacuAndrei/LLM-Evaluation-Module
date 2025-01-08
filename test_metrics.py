@@ -3,32 +3,27 @@ import os
 import sys
 import json
 import logging
-import openai
-from typing import List, Dict, Any
+from typing import Dict, Any
 import unittest
-import pandas as pd
 from dotenv import load_dotenv
 from ruamel.yaml import YAML
 from datasets import Dataset
-from datetime import datetime
+
+from llm_provider import get_llm
+from excel_writer import write_results_to_excel
 
 #Ragas
-from ragas.metrics import FactualCorrectness
+from ragas.metrics.base import MetricWithLLM, MetricWithEmbeddings
+from ragas.metrics import FactualCorrectness, AnswerSimilarity
+
 from ragas.run_config import RunConfig
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas import evaluate
 
 #Embeddings & VectorStore
-from langchain_openai.embeddings import OpenAIEmbeddings
-from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-#LLM To be Evaluated
-from langchain_openai.chat_models import ChatOpenAI
-from langchain_ollama import ChatOllama
-
 
 #Temporary
 from langchain import hub
@@ -50,8 +45,8 @@ class RagasEvaluator:
     def __init__(self, config: Dict[str, Any]) -> None:
         self.config = config
         
-        embeddings = OllamaEmbeddings(model=self.config["embeddings"]["model"]) #OpenAIEmbeddings()
-        self.embedding = LangchainEmbeddingsWrapper(embeddings)
+        embeddings_llm = get_llm(config["embeddings"], type="embeddings")
+        self.embeddings_llm = LangchainEmbeddingsWrapper(embeddings_llm)
 
         # See full prompt at https://smith.langchain.com/hub/rlm/rag-prompt
         prompt = hub.pull("rlm/rag-prompt")
@@ -59,16 +54,11 @@ class RagasEvaluator:
         loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
         data = loader.load()
 
-        # Split text in chunks and store it in FAISS vectorstore
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         all_splits = text_splitter.split_documents(data)
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
-
-        #llm_to_be_evaluated
-        self.llm_to_be_evaluated = ChatOllama( #ChatOpenAI(
-            model=self.config["llm_to_be_evaluated"]["model"],
-            temperature=self.config["llm_to_be_evaluated"]["temperature"]
-        )        
+        vectorstore = FAISS.from_documents(documents=all_splits, embedding=self.embeddings_llm)
+     
+        self.llm_to_be_evaluated = get_llm(self.config["llm_to_be_evaluated"])
         
         self.chain = (
             {
@@ -80,28 +70,28 @@ class RagasEvaluator:
             | StrOutputParser()
         )
 
-        #Ragas LLM
-        self.ragas_helper_llm = ChatOpenAI(
-            model=self.config["ragas_helper_llm"]["model"],
-            temperature=self.config["ragas_helper_llm"]["temperature"]
-        )
-
-        self.llm = LangchainLLMWrapper(self.ragas_helper_llm)
+        self.ragas_helper_llm = get_llm(self.config["ragas_helper_llm"])
+        self.ragas_helper_llm = LangchainLLMWrapper(self.ragas_helper_llm)
         self.init_ragas_metrics()
 
     def format_docs(self, docs):
         return "\n\n".join(doc.page_content for doc in docs)
 
     def init_ragas_metrics(self):
+
         self.metrics = []
-
         metric = FactualCorrectness()
-        metric.llm = self.llm
-
-        run_config = RunConfig()
-        metric.init(run_config)
-
+        # metric = AnswerSimilarity()
         self.metrics += [metric]
+
+        for metric in self.metrics:
+            if isinstance(metric, MetricWithLLM):
+                metric.llm = self.ragas_helper_llm
+            if isinstance(metric, MetricWithEmbeddings):
+                metric.embeddings = self.embeddings_llm
+
+            run_config = RunConfig()
+            metric.init(run_config) 
             
     def load_dataset(self, absolute_path: str):
         with open(absolute_path, "r") as json_file:
@@ -136,74 +126,12 @@ class RagasEvaluator:
 
         return evaluation_batch
     
-    def write_results_to_excel(self, results):
-        question_list, answer_list = self.extract_questions_and_answers()
-        new_data = self.prepare_new_data(question_list, answer_list, results)
-        df_new = self.create_dataframe(new_data)
-        excel_path = os.environ["RESULTS_EXCEL_PATH"]
-        self.save_to_excel(df_new, excel_path)
-
-    def extract_questions_and_answers(self):
-        question_list = [sample["question"] for sample in self.incomplete_samples]
-        answer_list = [sample["response"] for sample in self.incomplete_samples]
-        return question_list, answer_list
-
-    def prepare_new_data(self, question_list, answer_list, results):
-        version_number = datetime.now().strftime("%Y-%m-%dT%H:%M")
-        new_data = {
-            "Version Number": [version_number],
-            "Question Source": [EVAL_DATASET_PATH],
-            "Doc Format": [self.config["test"]["doc_format"]],
-            "Number of Questions": [len(self.incomplete_samples)],
-            "Embeddings Model": [self.config["embeddings"]["model"]],
-            "Model to be Evaluated": [self.config["llm_to_be_evaluated"]["model"]],
-            "Model used for Ragas Metrics": [self.config["ragas_helper_llm"]["model"]],
-            "Question Number": list(range(1, len(question_list) + 1)),
-            "Questions": question_list,
-            "Answers": answer_list,
-        }
-        
-        for metric in self.metrics:
-            new_data[metric.name] = results[metric.name]
-            
-        self.normalize_data_length(new_data)
-        
-        return new_data
-
-    def normalize_data_length(self, new_data):
-        max_length = max(len(lst) for lst in new_data.values())
-        for key in new_data:
-            current_length = len(new_data[key])
-            if current_length < max_length:
-                new_data[key].extend([None] * (max_length - current_length))
-
-    def create_dataframe(self, new_data):
-        df_new = pd.DataFrame(new_data)
-        averages = {metric.name: df_new[metric.name].mean() for metric in self.metrics}
-        average_row = {col: None for col in df_new.columns}
-        average_row.update(averages)
-        average_row["Version Number"] = "Average"
-        df_average = pd.DataFrame([average_row])
-        df_new = pd.concat([df_new, df_average], ignore_index=True)
-        empty_row = {col: '__________' for col in df_new.columns}
-        df_empty = pd.DataFrame([empty_row])
-        df_new = pd.concat([df_new, df_empty], ignore_index=True)
-        return df_new
-
-    def save_to_excel(self, df_new, excel_path):
-        if not os.path.exists(excel_path):
-            df_new.to_excel(excel_path, index=False)
-        else:
-            with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
-                startrow = writer.sheets['Sheet1'].max_row if 'Sheet1' in writer.sheets else 0
-                df_new.to_excel(writer, index=False, header=writer.sheets['Sheet1'].max_row == 0, startrow=startrow)
-
     def run_experiment(self):
         evaluation_batch = self.get_evaluation_batch()
         ds = Dataset.from_dict(evaluation_batch)
-        r = evaluate(ds, metrics=self.metrics)
-        logger.info(f"Final scores {r}")
-        self.write_results_to_excel(results=r)
+        results = evaluate(ds, metrics=self.metrics)
+        logger.info(f"Final scores {results}")
+        write_results_to_excel(results, self.metrics, self.config)
      
 class TestRagas(unittest.TestCase):
 
