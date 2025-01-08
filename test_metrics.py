@@ -35,7 +35,7 @@ from langchain_core.runnables import RunnablePassthrough
 load_dotenv()
 
 EVAL_DATASET_PATH = os.environ.get('DATASET_FILENAME')
-print(EVAL_DATASET_PATH)
+
 CHUNK_SIZES = {"small": 300, "medium": 650, "large": 1000}
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -147,4 +147,3 @@ class TestRagas(unittest.TestCase):
 if __name__ == "__main__":
     # unittest.main(exit=False)
     dataset = RagasEvaluator(config=TestRagas.config).load_dataset(absolute_path=EVAL_DATASET_PATH)
-    print(dataset)
