@@ -16,4 +16,3 @@ embeddings:
 
 test:
   metrics: [faithfulness, answer_similarity, context_precision]
-  doc_format: json  # use 'mixed' if there are multiple formats
