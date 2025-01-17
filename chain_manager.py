@@ -18,13 +18,13 @@ class ChainManager:
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         all_splits = text_splitter.split_documents(data)
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=self.embeddings_llm)
+        #vectorstore = FAISS.from_documents(documents=[], embedding=self.embeddings_llm)
 
         llm_to_be_evaluated = get_llm(self.config["llm_to_be_evaluated"])
 
         return (
             {
-                "context": vectorstore.as_retriever() | self.format_docs,
+                "context": RunnablePassthrough(),
                 "question": RunnablePassthrough(),
             }
             | prompt
