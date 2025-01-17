@@ -1,8 +1,8 @@
 [
     {
-        "question": "Who is the current president of the United States?",
-        "ground_truth": "The current president of the United States is Joe Biden. He assumed office as the 46th president on January 20, 2021.",
-        "must_mention": ["Biden"]
+        "question": "2+2?",
+        "ground_truth": "4",
+        "must_mention": ["4"]
     },
     {
         "question": "What are the latest updates on climate change?",

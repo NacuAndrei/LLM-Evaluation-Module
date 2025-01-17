@@ -21,7 +21,7 @@ def get_results_array(results, metrics, config):
     new_data = {
         "Version Number": [version_number],
         "Question Source": [os.environ.get('DATASET_FILENAME')],
-        "Doc Format": [config["test"]["doc_format"]],
+        "Doc Format": [os.path.splitext(os.environ.get('DATASET_FILENAME'))[1].replace(".", "")],
         "Number of Questions": [len(question_list)],
         "Embeddings Model": [config["embeddings"]["model"]],
         "Model to be Evaluated": [config["llm_to_be_evaluated"]["model"]],

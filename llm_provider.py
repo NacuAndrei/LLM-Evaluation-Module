@@ -1,8 +1,6 @@
 from enum import Enum
 from typing import Dict
 
-from langchain_core.language_models import BaseLanguageModel
-
 from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 
@@ -15,6 +13,7 @@ class LLM_Names(Enum):
     
 class LLM_IDs(Enum):
     OPENAI_GPT_4o_MINI = "gpt-4o-mini"
+    OPENAI_GPT_4_TURBO = "gpt-4-turbo"
     OLLAMA_LLAMA_3 = "llama3"
   
 class ConfigProps(Enum):
@@ -22,7 +21,7 @@ class ConfigProps(Enum):
     MODEL_ID = "model_id"
     MODEL = "model"
   
-def get_llm(config: Dict, type = "llm") -> BaseLanguageModel:
+def get_llm(config: Dict, type = "llm"):
     relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
     valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
     
@@ -37,7 +36,7 @@ def get_llm(config: Dict, type = "llm") -> BaseLanguageModel:
     
         raise ValueError(f"Invalid llm: {provider}")
 
-    elif type == "embeddings":
+    elif type == "embeddings": #embeddings use dimension, not max_tokens (future work)
         if provider == LLM_Names.OPENAI.value:
             return OpenAIEmbeddings(**valid_config)
     
