@@ -1,9 +1,13 @@
+import os
 from chain import Chain
 
 class LLMInvoker:
-    def __init__(self, docs_path, model, chunk_size, chunk_overlap, query):
-        self.chain = Chain(docs_path, model=model, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    def __init__(self, query, config: dict):
+        self.config = config
+        
+        self.chain = Chain(self.config)
         self.qa_chain = self.chain.create_chain()
+        
         self.query = query
 
     def invoke(self):

@@ -1,18 +1,15 @@
 llm_to_be_evaluated:
   provider: 'openai'
   model: 'gpt-4o-mini'
-  max_tokens: 2000
-  temperature: 0.0
 
 ragas_helper_llm:
   provider: 'openai'
   model: 'gpt-4o-mini'
-  max_tokens: 2000
-  temperature: 0.0
 
-embeddings:
+embedding:
   provider: 'openai'
   model: 'text-embedding-3-small'
 
-test:
-  metrics: [faithfulness, answer_similarity, context_precision]
+vectorstore:
+  chunk_size: 500
+  chunk_overlap: 50
