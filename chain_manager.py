@@ -2,8 +2,7 @@ import os
 
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_openai import ChatOpenAI
-from ingestion import DocumentIngestor
+from context_ingestion import DocumentIngestor
 from langchain.hub import pull
 
 from llm_provider import get_llm
