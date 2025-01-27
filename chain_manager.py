@@ -6,6 +6,8 @@ from langchain_openai import ChatOpenAI
 from ingestion import DocumentIngestor
 from langchain.hub import pull
 
+from llm_provider import get_llm
+
 class ChainManager:
     def __init__(self, llm_config, embedding_config, vectorstore_config):
         self.llm_config = llm_config
@@ -15,6 +17,6 @@ class ChainManager:
 
     def create_chain(self):
         retrieval_qa_chat_prompt = pull("langchain-ai/retrieval-qa-chat")
-        combine_docs_chain = create_stuff_documents_chain(ChatOpenAI(), retrieval_qa_chat_prompt)
+        combine_docs_chain = create_stuff_documents_chain(get_llm(self.llm_config, type="llm"), retrieval_qa_chat_prompt)
         retrieval_chain = create_retrieval_chain(self.vectorstore.as_retriever(), combine_docs_chain)
         return retrieval_chain

@@ -7,11 +7,13 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
+from llm_provider import get_llm
+
 class DocumentIngestor:
     #TODO: Save vectorstore locally
     def __init__(self, embedding_config, vectorstore_config):
         self.embedding_model = embedding_config["model"]
-        self.embedding = OpenAIEmbeddings(model=self.embedding_model)
+        self.embedding = get_llm(embedding_config, type="embeddings")
         
         self.chunk_size = vectorstore_config["chunk_size"]
         self.chunk_overlap = vectorstore_config["chunk_overlap"]
