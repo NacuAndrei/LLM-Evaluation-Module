@@ -2,7 +2,7 @@ llm_to_be_evaluated:
   provider: 'openai'
   model: 'gpt-4o-mini'
 
-ragas_helper_llm:
+llm_judge:
   provider: 'openai'
   model: 'gpt-4o-mini'
 
