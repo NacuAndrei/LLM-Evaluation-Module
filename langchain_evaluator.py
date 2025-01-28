@@ -25,6 +25,7 @@ class LangchainEvaluator:
             "question": res["question"],
             "answer": res["answer"],
             "ground_truth": res["ground_truth"],
+            "reasoning": eval_result["reasoning"],
             "score": eval_result["score"]
             })
         

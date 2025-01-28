@@ -1,67 +1,55 @@
 import os
 import pandas as pd
+from openpyxl import load_workbook
 from datetime import datetime
 
-def write_results_to_excel(results, metrics, config):    
-    results_array = get_results_array(results, metrics, config)
-    results_df = get_df(results, metrics, results_array)
-    excel_path = os.environ["RESULTS_EXCEL_PATH"]
-    save_to_excel(results_df, excel_path)
+class ExcelWriter:
+    def __init__(self, file_path="results/output.xlsx", config=None):
+        self.file_path = file_path
+        self.config = config or {}
+        self._ensure_directory_exists()
 
-def extract_questions_and_answers(results):
-    samples = results.dataset.samples
-    question_list = [sample.user_input for sample in samples]
-    answer_list = [sample.response for sample in samples]
-    return question_list, answer_list
+    def _ensure_directory_exists(self):
+        directory = os.path.dirname(self.file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-def get_results_array(results, metrics, config):
-    question_list, answer_list = extract_questions_and_answers(results)
+    def write_dataframe(self, df, sheet_name='Default_Evaluation'):
+        version_number = datetime.now().strftime("%Y-%m-%dT%H:%M")
+        question_source = os.environ.get('DATASET_FILENAME', 'unknown')
+        doc_format = os.path.splitext(question_source)[1].replace(".", "")
+        number_of_questions = len(df)
+        embedding_model = self.config.get('embedding_model', 'unknown')
+        evaluated_model = self.config.get('evaluated_model', 'unknown')
+        judge_model = self.config.get('judge_model', 'unknown')
 
-    version_number = datetime.now().strftime("%Y-%m-%dT%H:%M")
-    new_data = {
-        "Version Number": [version_number],
-        "Question Source": [os.environ.get('DATASET_FILENAME')],
-        "Doc Format": [os.path.splitext(os.environ.get('DATASET_FILENAME'))[1].replace(".", "")],
-        "Number of Questions": [len(question_list)],
-        "Embeddings Model": [config["embeddings"]["model"]],
-        "Model to be Evaluated": [config["llm_to_be_evaluated"]["model"]],
-        "Model used for Ragas Metrics": [config["ragas_helper_llm"]["model"]],
-        "Question Number": list(range(1, len(question_list) + 1)),
-        "Questions": question_list,
-        "Answers": answer_list,
-    }
-    
-    for metric in metrics:
-        new_data[metric.name] = results[metric.name]
-        
-    normalize_data_length(new_data)
-    
-    return new_data
+        additional_data = {
+            'Version Number': [version_number] + [''] * (len(df) - 1),
+            'Question Source': [question_source] + [''] * (len(df) - 1),
+            'Doc Format': [doc_format] + [''] * (len(df) - 1),
+            'Number of Questions': [number_of_questions] + [''] * (len(df) - 1),
+            'Embedding Model': [embedding_model] + [''] * (len(df) - 1),
+            'Evaluated Model': [evaluated_model] + [''] * (len(df) - 1),
+            'Judge Model': [judge_model] + [''] * (len(df) - 1)
+        }
 
-def normalize_data_length(new_data):
-    max_length = max(len(lst) for lst in new_data.values())
-    for key in new_data:
-        current_length = len(new_data[key])
-        if current_length < max_length:
-            new_data[key].extend([None] * (max_length - current_length))
+        for key, value in additional_data.items():
+            df[key] = value
 
-def get_df(results, metrics, new_data):
-    df_new = pd.DataFrame(new_data)
-    averages = {metric.name: df_new[metric.name].mean() for metric in metrics}
-    average_row = {col: None for col in df_new.columns}
-    average_row.update(averages)
-    average_row["Version Number"] = "Average"
-    df_average = pd.DataFrame([average_row])
-    df_new = pd.concat([df_new, df_average], ignore_index=True)
-    empty_row = {col: '__________' for col in df_new.columns}
-    df_empty = pd.DataFrame([empty_row])
-    df_new = pd.concat([df_new, df_empty], ignore_index=True)
-    return df_new
+        if 'score' in df.columns:
+            average_score = df['score'].mean()
+            df['average'] = [average_score] + [''] * (len(df) - 1)
 
-def save_to_excel(df_new, excel_path):
-    if not os.path.exists(excel_path):
-        df_new.to_excel(excel_path, index=False)
-    else:
-        with pd.ExcelWriter(excel_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
-            startrow = writer.sheets['Sheet1'].max_row if 'Sheet1' in writer.sheets else 0
-            df_new.to_excel(writer, index=False, header=writer.sheets['Sheet1'].max_row == 0, startrow=startrow)
+        separator = pd.DataFrame([['-' * 10] * len(df.columns)], columns=df.columns)
+        df = pd.concat([df, separator], ignore_index=True)
+
+        if not os.path.exists(self.file_path):
+            df.to_excel(self.file_path, sheet_name=sheet_name, index=False)
+        else:
+            with pd.ExcelWriter(self.file_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+                writer._book = load_workbook(self.file_path)
+                if sheet_name in writer.book.sheetnames:
+                    startrow = writer.book[sheet_name].max_row
+                else:
+                    startrow = 0
+                df.to_excel(writer, sheet_name=sheet_name, startrow=startrow, index=False, header=startrow==0)

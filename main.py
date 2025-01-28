@@ -1,6 +1,7 @@
 from config_loader import ConfigLoader
 from langchain_evaluator import LangchainEvaluator
 from llm_invoker import *
+from excel_writer import *
 import json
 
 if __name__ == "__main__":
@@ -10,6 +11,10 @@ if __name__ == "__main__":
         questions = json.load(file)
         
     evaluator = LangchainEvaluator(questions, config)
-    
     df = evaluator.evaluate()
-    print(df)
+    
+    writer = ExcelWriter()
+    writer.write_dataframe(df, sheet_name="Langchain_Evaluation")
+    
+    print("Done!")
+    
