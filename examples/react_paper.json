@@ -1,0 +1,14 @@
+[
+    {
+        "question": "What is the main idea of the paper?",
+        "ground_truth": "The paper introduces ReAct, a novel framework combining reasoning and acting in large language models to improve task-solving across diverse reasoning and decision-making challenges."
+    },
+    {
+        "question": "How does the proposed method work?",
+        "ground_truth": "ReAct interleaves reasoning traces and task-specific actions, enabling models to dynamically plan, interact with environments, and update strategies based on external feedback."
+    },
+    {
+        "question": "What is the most important key finding of the study?",
+        "ground_truth": "ReAct significantly outperforms existing methods in reasoning, task-solving accuracy, and interpretability by leveraging both internal knowledge and external information retrieval​."
+    }
+]

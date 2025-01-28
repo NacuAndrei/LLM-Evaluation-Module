@@ -8,11 +8,15 @@ class LLMInvoker:
 
     def invoke(self):
         results = []
-        for question in self.questions:
+        for question_data in self.questions:
+            question = question_data["question"]
+            ground_truth = question_data["ground_truth"]
+            
             result = self.chain.invoke(input={"input": question})
             new_result = {
-                "query": result["input"],
-                "result": result["answer"],
+                "question": result["input"],
+                "answer": result["answer"],
+                "ground_truth": ground_truth
                 #"source_documents": result["context"],
             }
             results.append(new_result)

@@ -1,18 +1,15 @@
 from config_loader import ConfigLoader
-
+from langchain_evaluator import LangchainEvaluator
 from llm_invoker import *
+import json
 
 if __name__ == "__main__":
-    questions = [
-        "What is the main idea of the paper?",
-        "How does the proposed method work?",
-        "What is the most important key finding of the study?"
-    ]
     config = ConfigLoader.load_config()
     
-    invoker = LLMInvoker(questions, config)
-    results = invoker.invoke()
+    with open('examples/react_paper.json', 'r') as file:
+        questions = json.load(file)
+        
+    evaluator = LangchainEvaluator(questions, config)
     
-    for res in results:
-        print(f"Question: {res['query']}")
-        print(f"Answer: {res['result']}\n")
+    df = evaluator.evaluate()
+    print(df)
