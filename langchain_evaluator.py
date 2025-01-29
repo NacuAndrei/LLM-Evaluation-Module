@@ -1,5 +1,5 @@
 import pandas as pd
-from langchain.evaluation import load_evaluator
+from langchain.evaluation import load_evaluator, EvaluatorType
 
 from llm_invoker import LLMInvoker
 from llm_provider import get_llm
@@ -8,7 +8,7 @@ class LangchainEvaluator:
     def __init__(self, questions, config):
         self.llm_judge_config = config["llm_judge"]
         
-        self.evaluator = load_evaluator("labeled_criteria", llm=get_llm(self.llm_judge_config, type="llm"), criteria="correctness")
+        self.evaluator = load_evaluator(evaluator=EvaluatorType.COT_QA, llm=get_llm(self.llm_judge_config, type="llm"), criteria="correctness")
         self.questions = questions
         self.config = config
     
@@ -21,7 +21,8 @@ class LangchainEvaluator:
             eval_result = self.evaluator.evaluate_strings(
                 input=res["question"],
                 prediction=res["answer"],
-                reference=res["ground_truth"]
+                reference=res["ground_truth"],
+                context=res["context"]
             )
             eval_results.append({
                 "question": res["question"],

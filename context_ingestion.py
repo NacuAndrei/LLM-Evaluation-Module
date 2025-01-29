@@ -9,11 +9,8 @@ from langchain_community.vectorstores import FAISS
 from llm_provider import get_llm
 
 class DocumentIngestor:
-    #TODO: Save vectorstore locally
     def __init__(self, embedding_config, vectorstore_config):
-        self.embedding_model = embedding_config["model"]
         self.embedding = get_llm(embedding_config, type="embeddings")
-        
         self.chunk_size = vectorstore_config["chunk_size"]
         self.chunk_overlap = vectorstore_config["chunk_overlap"]
 
@@ -24,3 +21,6 @@ class DocumentIngestor:
         splitted_documents = text_splitter.split_documents(raw_documents)
         vectorstore = FAISS.from_documents(documents=splitted_documents, embedding=self.embedding)
         return vectorstore
+
+    def similarity_search(self, vectorstore, query, k=5):
+        return vectorstore.similarity_search(query, k=k)
