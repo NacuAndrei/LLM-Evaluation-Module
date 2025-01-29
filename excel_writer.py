@@ -4,7 +4,7 @@ from openpyxl import load_workbook
 from datetime import datetime
 
 class ExcelWriter:
-    def __init__(self, file_path="results/output.xlsx", config=None):
+    def __init__(self, file_path=os.environ.get("RESULTS_EXCEL_PATH"), config=None):
         self.file_path = file_path
         self.config = config or {}
         self._ensure_directory_exists()
@@ -19,18 +19,18 @@ class ExcelWriter:
         question_source = os.environ.get('DATASET_FILENAME', 'unknown')
         doc_format = os.path.splitext(question_source)[1].replace(".", "")
         number_of_questions = len(df)
-        embedding_model = self.config.get('embedding_model', 'unknown')
-        evaluated_model = self.config.get('evaluated_model', 'unknown')
-        judge_model = self.config.get('judge_model', 'unknown')
+        embedding_model = self.config.get('embedding', {}).get('model', 'unknown')
+        evaluated_model = self.config.get('llm_to_be_evaluated', {}).get('model', 'unknown')
+        judge_model = self.config.get('llm_judge', {}).get('model', 'unknown')
 
         additional_data = {
-            'Version Number': [version_number] + [''] * (len(df) - 1),
-            'Question Source': [question_source] + [''] * (len(df) - 1),
-            'Doc Format': [doc_format] + [''] * (len(df) - 1),
-            'Number of Questions': [number_of_questions] + [''] * (len(df) - 1),
-            'Embedding Model': [embedding_model] + [''] * (len(df) - 1),
-            'Evaluated Model': [evaluated_model] + [''] * (len(df) - 1),
-            'Judge Model': [judge_model] + [''] * (len(df) - 1)
+            'Version number': [version_number] + [''] * (len(df) - 1),
+            'Question source': [question_source] + [''] * (len(df) - 1),
+            'Doc format': [doc_format] + [''] * (len(df) - 1),
+            'Number of questions': [number_of_questions] + [''] * (len(df) - 1),
+            'Embedding model': [embedding_model] + [''] * (len(df) - 1),
+            'Evaluated model': [evaluated_model] + [''] * (len(df) - 1),
+            'Judge model': [judge_model] + [''] * (len(df) - 1)
         }
 
         for key, value in additional_data.items():

@@ -13,7 +13,7 @@ if __name__ == "__main__":
     evaluator = LangchainEvaluator(questions, config)
     df = evaluator.evaluate()
     
-    writer = ExcelWriter()
+    writer = ExcelWriter(config=config)
     writer.write_dataframe(df, sheet_name="Langchain_Evaluation")
     
     print("Done!")
