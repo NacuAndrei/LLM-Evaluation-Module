@@ -1,13 +1,18 @@
-import unittest
 from config_loader import ConfigLoader
-from ragas_evaluator import RagasEvaluator
-
-class TestRagas(unittest.TestCase):
-    config = ConfigLoader.load_config()
-    ragas_eval = RagasEvaluator(config=config)
-
-    def test_run_experiment(self):
-        self.ragas_eval.run_experiment()
+from langchain_evaluator import LangchainEvaluator
+from excel_writer import ExcelWriter
+import json
 
 if __name__ == "__main__":
-    unittest.main(exit=False)
+    config = ConfigLoader.load_config()
+    
+    with open('examples/react_paper.json', 'r') as file:
+        questions = json.load(file)
+        
+    evaluator = LangchainEvaluator(questions, config)
+    df = evaluator.evaluate()
+    
+    writer = ExcelWriter(config=config)
+    writer.write_dataframe(df, sheet_name="Langchain_Evaluation")
+    
+    print("Done!")

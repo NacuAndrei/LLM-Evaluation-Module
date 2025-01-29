@@ -1,39 +1,21 @@
-from langchain import hub
+import os
 
-from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import WebBaseLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from context_ingestion import DocumentIngestor
+from langchain.hub import pull
 
 from llm_provider import get_llm
 
 class ChainManager:
-    def __init__(self, config: dict, embeddings_llm):
-        self.config = config
-        self.embeddings_llm = embeddings_llm
+    def __init__(self, llm_config, embedding_config, vectorstore_config):
+        self.llm_config = llm_config
+        self.docs_path = os.environ.get("DATASET_FILENAME")
+        self.ingestor = DocumentIngestor(embedding_config, vectorstore_config)
+        self.vectorstore = self.ingestor.ingest_docs(self.docs_path)
 
-    def setup_chain(self):
-        prompt = hub.pull("rlm/rag-prompt")
-        
-        # loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
-        # data = loader.load()
-
-        # text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
-        # all_splits = text_splitter.split_documents(data)
-        #vectorstore = FAISS.from_documents(documents=[], embedding=self.embeddings_llm)
-
-        llm_to_be_evaluated = get_llm(self.config["llm_to_be_evaluated"])
-
-        return (
-            {
-                "context": RunnablePassthrough(),
-                "question": RunnablePassthrough(),
-            }
-            | prompt
-            | llm_to_be_evaluated
-            | StrOutputParser()
-        )
-        
-    def format_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
+    def create_chain(self):
+        retrieval_qa_chat_prompt = pull("langchain-ai/retrieval-qa-chat")
+        combine_docs_chain = create_stuff_documents_chain(get_llm(self.llm_config, type="llm"), retrieval_qa_chat_prompt)
+        retrieval_chain = create_retrieval_chain(self.vectorstore.as_retriever(), combine_docs_chain)
+        return retrieval_chain

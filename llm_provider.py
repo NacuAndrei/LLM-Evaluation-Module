@@ -1,49 +1,36 @@
 from enum import Enum
 from typing import Dict
 
-from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
-
-from langchain_openai import OpenAIEmbeddings
-from langchain_ollama import OllamaEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_ollama import ChatOllama, OllamaEmbeddings
 
 class LLM_Names(Enum):
     OPENAI = "openai"
     OLLAMA = "ollama"
-    
-class LLM_IDs(Enum):
-    OPENAI_GPT_4o_MINI = "gpt-4o-mini"
-    OPENAI_GPT_4_TURBO = "gpt-4-turbo"
-    OLLAMA_LLAMA_3 = "llama3"
   
 class ConfigProps(Enum):
     PROVIDER = "provider"
-    MODEL_ID = "model_id"
     MODEL = "model"
   
-def get_llm(config: Dict, type = "llm"):
-    relevant_llm_keys = {'model', 'max_tokens', 'temperature'}
-    valid_config = {k: v for k, v in config.items() if k in relevant_llm_keys}
-    
+def get_llm(config: Dict, type="llm"):
     provider = config.get(ConfigProps.PROVIDER.value)
     
-    if type == "llm":
-        if provider == LLM_Names.OPENAI.value:
-            return ChatOpenAI(**valid_config)
-        
-        if provider == LLM_Names.OLLAMA.value:
-            return ChatOllama(**valid_config)
-    
-        raise ValueError(f"Invalid llm: {provider}")
-
-    elif type == "embeddings": #embeddings use dimension, not max_tokens (future work)
-        if provider == LLM_Names.OPENAI.value:
-            return OpenAIEmbeddings(**valid_config)
-    
-        if provider == LLM_Names.OLLAMA.value:
-            return OllamaEmbeddings(**valid_config)
-
-    else:
+    if provider not in LLM_Names._value2member_map_:
         raise ValueError(f"Invalid provider: {provider}")
-
     
+    config_filtered = {k: v for k, v in config.items() if k != ConfigProps.PROVIDER.value}
+    
+    if type == "llm":
+        llm_classes = {
+            LLM_Names.OPENAI.value: ChatOpenAI,
+            LLM_Names.OLLAMA.value: ChatOllama
+        }
+    elif type == "embeddings":
+        llm_classes = {
+            LLM_Names.OPENAI.value: OpenAIEmbeddings,
+            LLM_Names.OLLAMA.value: OllamaEmbeddings
+        }
+    else:
+        raise ValueError(f"Invalid type: {type}")
+    
+    return llm_classes[provider](**config_filtered)
