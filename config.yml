@@ -1,6 +1,6 @@
 llm_to_be_evaluated:
-  provider: 'openai'
-  model: 'gpt-4o-mini'
+  provider: 'ollama'
+  model: 'llama3'
 
 llm_judge:
   provider: 'openai'
