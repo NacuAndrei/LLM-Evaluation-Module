@@ -21,6 +21,3 @@ class DocumentIngestor:
         splitted_documents = text_splitter.split_documents(raw_documents)
         vectorstore = FAISS.from_documents(documents=splitted_documents, embedding=self.embedding)
         return vectorstore
-
-    def similarity_search(self, vectorstore, query, k=5):
-        return vectorstore.similarity_search(query, k=k)

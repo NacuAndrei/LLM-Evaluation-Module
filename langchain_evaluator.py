@@ -21,8 +21,7 @@ class LangchainEvaluator:
             eval_result = self.evaluator.evaluate_strings(
                 input=res["question"],
                 prediction=res["answer"],
-                reference=res["ground_truth"],
-                context=res["context"]
+                reference=res["ground_truth"]
             )
             eval_results.append({
                 "question": res["question"],
