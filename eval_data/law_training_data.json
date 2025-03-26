@@ -1,0 +1,295 @@
+[
+    {
+        "question": "Când nu poate fi concediat un angajat?",
+        "retrieved_context": "Capitolul V - Concedierea\nArticolul 60 - Concedierea salariaților nu poate fi dispusă în anumite situații, cum ar fi pe durata incapacității temporare de muncă, concediului de maternitate sau concediului pentru creșterea copilului.",
+        "generated_answer": "Un angajat poate fi concediat oricând, indiferent de circumstanțe.",
+        "ground_truth": "Angajatul nu poate fi concediat în timpul incapacității temporare de muncă, concediului de maternitate sau concediului pentru creșterea copilului, conform Articolului 60.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece conform Articolului 60 din Codul Muncii, concedierea este interzisă în anumite condiții clar definite."
+    },
+    {
+        "question": "Ce protecție au angajații împotriva concedierii discriminatorii?",
+        "retrieved_context": "Capitolul V - Concedierea\nArticolul 59 - Este interzisă concedierea salariaților pe criterii de rasă, religie, sex, vârstă sau apartenență sindicală.",
+        "generated_answer": "Angajatorul poate concedia un angajat din orice motiv, atâta timp cât îi oferă un preaviz.",
+        "ground_truth": "Angajații sunt protejați împotriva concedierii discriminatorii pe criterii precum rasă, religie sau sex conform Articolului 59.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 59 interzice concedierea bazată pe discriminare, indiferent de existența unui preaviz."
+    },
+    {
+        "question": "Ce condiții trebuie îndeplinite pentru concedierea unui angajat pe motiv disciplinar?",
+        "retrieved_context": "Capitolul V - Concedierea\nArticolul 63 - Concedierea pentru abateri disciplinare poate fi dispusă doar după îndeplinirea cercetării disciplinare prealabile.",
+        "generated_answer": "Angajatorul poate concedia un angajat imediat după constatarea unei abateri.",
+        "ground_truth": "Concedierea unui angajat pe motiv disciplinar poate fi dispusă doar după o cercetare disciplinară prealabilă, conform Articolului 63.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 63 prevede că trebuie realizată o cercetare disciplinară înainte de concediere."
+    },
+    {
+        "question": "Ce drepturi au angajații concediați pentru motive care nu țin de persoana lor?",
+        "retrieved_context": "Capitolul V - Concedierea\nArticolul 67 - Angajații concediați pentru motive care nu țin de persoana lor beneficiază de măsuri de protecție împotriva șomajului și pot primi compensații.",
+        "generated_answer": "Angajații concediați din motive care nu țin de persoana lor nu beneficiază de nicio compensație.",
+        "ground_truth": "Angajații concediați pentru motive ce nu țin de persoana lor beneficiază de măsuri de protecție împotriva șomajului și pot primi compensații, conform Articolului 67.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 67 prevede măsuri de protecție și compensații pentru acești angajați."
+    },
+    {
+        "question": "Cum poate un angajat să conteste concedierea sa?",
+        "retrieved_context": "Capitolul V - Concedierea\nArticolul 62 - Angajații care consideră că au fost concediați abuziv pot solicita angajatorului să prezinte în scris motivele concedierii și pot contesta decizia în instanță.",
+        "generated_answer": "Angajații nu pot contesta concedierea decât prin intermediul unui sindicat.",
+        "ground_truth": "Un angajat poate contesta concedierea sa în instanță dacă consideră că a fost concediat abuziv, conform Articolului 62.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece conform Articolului 62, orice angajat poate contesta concedierea în instanță, indiferent dacă este sau nu membru al unui sindicat."
+    },
+    {
+        "question": "Ce obligații are un angajator atunci când desființează un loc de muncă?",
+        "retrieved_context": "Articolul 65 - Desființarea locului de muncă trebuie să fie efectivă și să aibă o cauză reală și serioasă.",
+        "generated_answer": "Angajatorul nu trebuie să justifice desființarea unui loc de muncă.",
+        "ground_truth": "Angajatorul trebuie să asigure că desființarea unui loc de muncă este efectivă și bazată pe o cauză reală și serioasă, conform Articolului 65.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 65 specifică faptul că desființarea unui loc de muncă trebuie să aibă o cauză reală și serioasă."
+    },
+    {
+        "question": "Cum se definește concedierea colectivă?",
+        "retrieved_context": "Articolul 68 - Concedierea colectivă presupune disponibilizarea unui număr semnificativ de angajați într-o perioadă de 30 de zile, conform unor praguri stabilite în funcție de numărul total de salariați.",
+        "generated_answer": "Concedierea colectivă se referă la concedierea a cel puțin 5 angajați în orice firmă.",
+        "ground_truth": "Concedierea colectivă presupune disponibilizarea unui număr semnificativ de angajați într-o perioadă de 30 de zile, conform unor praguri specifice definite în Articolul 68.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 68 stabilește praguri specifice pentru diferite dimensiuni de companii."
+    },
+    {
+        "question": "Ce trebuie să facă un angajator înainte de a efectua concedieri colective?",
+        "retrieved_context": "Articolul 69 - Angajatorul trebuie să consulte sindicatul sau reprezentanții salariaților și să le ofere informații relevante despre concedierile preconizate.",
+        "generated_answer": "Angajatorul poate efectua concedieri colective fără consultarea sindicatului.",
+        "ground_truth": "Angajatorul trebuie să consulte sindicatul sau reprezentanții salariaților înainte de a efectua concedieri colective, conform Articolului 69.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 69 prevede obligativitatea consultării prealabile cu sindicatul sau reprezentanții salariaților."
+    },
+    {
+        "question": "Ce drepturi are un angajat concediat în mod nejustificat?",
+        "retrieved_context": "Articolul 80 - Dacă o concediere a fost nejustificată, instanța poate anula decizia.",
+        "generated_answer": "Un angajat concediat nejustificat nu are nicio cale de atac.",
+        "ground_truth": "Un angajat concediat nejustificat poate solicita instanței să anuleze decizia de concediere, conform Articolului 80.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 80 prevede că instanța poate anula concedierea și obliga angajatorul la plata despăgubirilor, dar acest detaliu lipsește din contextul extras."
+    },
+    {
+        "question": "Poate fi concediat un angajat aflat în concediu medical?",
+        "retrieved_context": "Articolul 60 - Concedierea nu poate fi dispusă pe durata concediului de maternitate sau concediului pentru creșterea copilului.",
+        "generated_answer": "Da, un angajat poate fi concediat chiar dacă este în concediu medical.",
+        "ground_truth": "Nu, un angajat nu poate fi concediat în timpul concediului medical, conform Articolului 60.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece Articolul 60 interzice concedierea și în cazul incapacității temporare de muncă, dar acest detaliu lipsește din contextul extras."
+    },
+    {
+        "question": "Care este durata maximă de lucru pentru un salariat cu fracțiune de normă?",
+        "retrieved_context": "Capitolul VIII - Contractul individual de muncă cu timp parțial\nArticolul 103 - Salariatul cu fracțiune de normă are un număr de ore inferioare celui normal al unui salariat cu normă întreagă.",
+        "generated_answer": "Durata maximă de lucru pentru un salariat cu fracțiune de normă este inferioară normei integrale.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect deoarece Articolul 103 specifică că salariații cu fracțiune de normă au un număr de ore inferior celui pentru norma întreagă."
+    },
+    {
+        "question": "Ce trebuie să conțină contractul de muncă la domiciliu?",
+        "retrieved_context": "Capitolul IX - Munca la domiciliu\nArticolul 109 - Contractul de muncă la domiciliu trebuie să includă precizarea că salariatul lucrează la domiciliu.",
+        "generated_answer": "Contractul de muncă la domiciliu trebuie să specifice că munca se desfășoară la domiciliu.",
+        "ground_truth": "Contractul de muncă la domiciliu trebuie să specifice că munca se desfășoară la domiciliu, programul și modalitățile de control ale angajatorului, și obligația de transport a materialelor.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect și incomplet deoarece nu menționează toate cerințele din Articolul 109, cum ar fi specificarea programului de control și obligația de transport a materialelor."
+    },
+    {
+        "question": "Un salariat cu fracțiune de normă poate efectua ore suplimentare?",
+        "retrieved_context": "Capitolul VIII - Contractul individual de muncă cu timp parțial\nArticolul 105 - Contractul include interdicția de a efectua ore suplimentare, cu excepția cazurilor specifice.",
+        "generated_answer": "Un salariat cu fracțiune de normă nu poate efectua ore suplimentare, cu excepția unor situații speciale.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 105 alin. (1) lit. c) precizează că salariaților cu fracțiune de normă le este interzis de a efectua ore suplimentare, cu excepția unor situații excepționale."
+    },
+    {
+        "question": "Salariatul cu muncă la domiciliu își stabilește programul de lucru?",
+        "retrieved_context": "Capitolul IX - Munca la domiciliu\nArticolul 108 - Salariații cu munca la domiciliu își stabilesc singuri programul de lucru.",
+        "generated_answer": "Da, salariatul cu muncă la domiciliu își stabilește programul de lucru.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect, deoarece Articolul 108 alin. (2) menționează că salariații cu munca la domiciliu își stabilesc singuri programul."
+    },
+    {
+        "question": "Ce obligație are angajatorul față de salariații care doresc transferul de la normă întreagă la fracțiune de normă?",
+        "retrieved_context": "Capitolul VIII - Contractul individual de muncă cu timp parțial\nArticolul 107 - Angajatorul trebuie să ia în considerare cererile de transfer și să informeze despre oportunități.",
+        "generated_answer": "Angajatorul trebuie să ia în considerare cererile de transfer și să informeze salariații despre locurile disponibile.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 107, angajatorul este obligat să considere cererile de transfer și să informeze angajații despre oportunități relevante."
+    },
+    {
+        "question": "Poate angajatorul să controleze activitatea unui salariat cu muncă la domiciliu?",
+        "retrieved_context": "Articolul 109 - Angajatorul are dreptul să verifice activitatea salariatului cu muncă la domiciliu.",
+        "generated_answer": "Da, angajatorul poate controla activitatea salariatului cu muncă la domiciliu.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 109 lit. b), angajatorul poate stabili programul în care să controleze activitatea angajatului."
+    },
+    {
+        "question": "Salariații cu muncă la domiciliu beneficiază de aceleași drepturi ca cei care lucrează la sediul angajatorului?",
+        "retrieved_context": "Articolul 110 - Salariații cu muncă la domiciliu se bucură de aceleași drepturi ca ceilalți angajați.",
+        "generated_answer": "Da, salariații cu muncă la domiciliu beneficiază de aceleași drepturi legale și contractuale.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect deoarece Articolul 110 alin. (1) garantează aceleași drepturi pentru salariații cu muncă la domiciliu."
+    },
+    {
+        "question": "Cum se acordă drepturile salariale pentru salariații cu fracțiune de normă?",
+        "retrieved_context": "Articolul 106 - Drepturile se acordă proporțional cu timpul lucrat efectiv.",
+        "generated_answer": "Drepturile salariale se acordă proporțional cu timpul efectiv lucrat.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 106 alin. (2) prevede acordarea drepturilor salariale proporțional cu timpul efectiv lucrat de salariat."
+    },
+    {
+        "question": "Este obligatoriu ca contractul de muncă cu timp parțial să fie încheiat în formă scrisă?",
+        "retrieved_context": "Articolul 104 - Contractul de muncă cu timp parțial se încheie numai în formă scrisă.",
+        "generated_answer": "Da, contractul de muncă cu timp parțial trebuie încheiat în formă scrisă.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 104 alin. (2), contractul de muncă cu timp parțial trebuie încheiat întotdeauna în formă scrisă."
+    },
+    {
+        "question": "Salariatul cu fracțiune de normă este comparabil cu salariatul cu normă întreagă?",
+        "retrieved_context": "Articolul 104 - Salariatul comparabil este cel cu normă întreagă care are un contract similar.",
+        "generated_answer": "Da, este comparabil cu un salariat cu normă întreagă în aceeași unitate.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 104 alin. (3), salariatul cu fracțiune de normă este comparat cu cel cu normă întreagă din unitatea respectivă."
+    },
+    {
+        "question": "Cum se formează familia conform Codului civil?",
+        "retrieved_context": "Cartea a II-a Despre familie, Titlul I Dispoziții generale, Articolul 258 - Familia se întemeiază pe căsătoria liber consimțită între soți.",
+        "generated_answer": "Familia se întemeiază pe căsătoria liber consimțită între soți.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 258 descrie clar că familia se bazează pe căsătoria consimțită de soți."
+    },
+    {
+        "question": "Cum poate înceta căsătoria?",
+        "retrieved_context": "Cartea a II-a Despre familie, Titlul I Dispoziții generale, Articolul 259 - Căsătoria încetează prin decesul sau prin declararea judecătorească a morții unuia dintre soți.",
+        "generated_answer": "Căsătoria încetează prin decesul sau prin declararea judecătorească a morții unuia dintre soți.",
+        "ground_truth": "Căsătoria încetează prin decesul sau prin declararea judecătorească a morții unuia dintre soți, dar poate fi desfăcută și prin divorț.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incomplet deoarece nu menționează că, pe lângă deces și declararea judecătorească a morții, căsătoria poate înceta și prin divorț, conform Articolului 259 alin. (6)."
+    },
+    {
+        "question": "Care este vârsta minimă pentru căsătorie fără condiții speciale?",
+        "retrieved_context": "Titlul II Căsătoria, Capitolul II Încheierea căsătoriei, Secţiunea 1 Condițiile de fond pentru încheierea căsătoriei, Articolul 272 - Căsătoria se poate încheia dacă viitorii soți au împlinit vârsta de 18 ani.",
+        "generated_answer": "Vârsta minimă este 18 ani, dar pentru motive temeinice, minorii de 16 ani pot să se căsătorească cu aviz medical, încuviințarea părinților și autorizarea instanței de tutelă.",
+        "ground_truth": "Vârsta minimă generală este 18 ani. Totuși, pentru motive temeinice, un minor de 16 ani se poate căsători cu aviz medical, încuviințarea părinților și autorizarea instanței de tutelă.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect deoarece include atât vârsta standard de 18 ani, cât și circumstanțele speciale în care un minor de 16 ani se poate căsători, conform Articolului 272 alin. (2)."
+    },
+    {
+        "question": "Este necesar un aviz medical pentru logodnă?",
+        "retrieved_context": "Titlul II Căsătoria, Capitolul I Logodna, Articolul 266 - Dispozițiile privind condițiile pentru încheierea căsătoriei sunt aplicabile logodnei, cu excepția avizului medical.",
+        "generated_answer": "Nu este necesar un aviz medical.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 266 prevede că logodna nu necesită aviz medical."
+    },
+    {
+        "question": "Ce presupune principiul interesului superior al copilului?",
+        "retrieved_context": "Cartea a II-a Despre familie, Titlul I Dispoziții generale, Articolul 263 - Orice măsură privitoare la copil trebuie să fie luată cu respectarea interesului superior al copilului.",
+        "generated_answer": "Orice măsură privind copilul trebuie să respecte interesul său superior.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 263 subliniază acest principiu ca fiind fundamental."
+    },
+    {
+        "question": "Ce se interzice referitor la bigamie?",
+        "retrieved_context": "Articolul 273 - Este interzisă încheierea unei noi căsătorii de către persoana care este deja căsătorită.",
+        "generated_answer": "Este interzisă încheierea unei noi căsătorii de către persoana care este deja căsătorită.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 273 clarifică interdicția referitoare la bigamie."
+    },
+    {
+        "question": "Cine este responsabil pentru creșterea copiilor minori?",
+        "retrieved_context": "Articolul 261 - Părinții au îndatorirea de creștere și educare a copiilor lor minori.",
+        "generated_answer": "Părinții sunt responsabili pentru creșterea și educarea copiilor.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 261, părinții au această responsabilitate primordială."
+    },
+    {
+        "question": "Ce implică ascultarea copilului în proceduri judiciare?",
+        "retrieved_context": "Articolul 264 - Ascultarea copilului care a împlinit vârsta de 10 ani este obligatorie, dar poate fi ascultat și copilul mai mic dacă este necesar.",
+        "generated_answer": "Copilul peste 10 ani trebuie ascultat obligatoriu în procedurile judiciare.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 264 stabilește această obligație în procedurile relevante."
+    },
+    {
+        "question": "Ce condiții sunt necesare pentru ruperea logodnei?",
+        "retrieved_context": "Articolul 267 - Logodnicul care rupe logodna nu poate fi constrâns să încheie căsătoria.",
+        "generated_answer": "Logodnicul care rupe logodna nu poate fi constrâns să încheie căsătoria și nu sunt necesare formalități pentru a dovedi ruperea logodnei.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect deoarece Articolul 267 alin. (1) specifică că logodnicul nu poate fi obligat să încheie căsătoria, iar alin. (3) menționează că ruperea logodnei nu necesită formalități și poate fi dovedită cu orice mijloc de probă."
+    },
+    {
+        "question": "Cum se restituie darurile în cazul ruperii logodnei?",
+        "retrieved_context": "Articolul 268 - Sunt supuse restituirii darurile primite în considerarea logodnei.",
+        "generated_answer": "Darurile primite în cadrul logodnei sunt supuse restituirii în natură sau, dacă acest lucru nu este posibil, în măsura îmbogățirii, cu excepția darurilor obișnuite.",
+        "correctness_label": "Correct",
+        "explanation": "Răspunsul este corect și complet, deoarece Articolul 268 prevede că darurile trebuie restituite fie în natură, fie în măsura îmbogățirii și menționează excepția darurilor obișnuite."
+    },
+    {
+        "question": "Ce presupune împrumutul de folosință?",
+        "retrieved_context": "Capitolul XIII Contractul de împrumut, Secţiunea a 2-a Împrumutul de folosință, Articolul 2.146 - Împrumutul de folosință este contractul cu titlu gratuit prin care o parte remite un bun celeilalte părți.",
+        "generated_answer": "Împrumutul de folosință presupune returnarea bunului numai dacă acesta nu se deteriorează.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece obligația de a returna bunul nu este condiționată de păstrarea acestuia în perfectă stare."
+    },
+    {
+        "question": "Poate comodatarul să utilizeze bunul pentru orice scop?",
+        "retrieved_context": "Capitolul XIII Contractul de împrumut, Secţiunea a 2-a Împrumutul de folosință, Articolul 2.148 - Comodatarul este ținut să conserve bunul împrumutat.",
+        "generated_answer": "Da, comodatarul poate folosi bunul în orice scop dacă îl înapoiază la timp.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 2.148 alin. (2), comodatarul nu poate folosi bunul decât în conformitate cu destinația determinată prin contract."
+    },
+    {
+        "question": "Ce se întâmplă dacă bunul împrumutat este distrus de un dezastru natural?",
+        "retrieved_context": "Capitolul XIII Contractul de împrumut, Secţiunea a 2-a Împrumutul de folosință, Articolul 2.149 - Comodatarul nu răspunde pentru deteriorarea bunului dacă nu folosește bunul impropriu.",
+        "generated_answer": "Comodatarul va fi întotdeauna responsabil pentru pieirea bunului din cauza forței majore.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece comodatarul nu răspunde pentru pieirea bunului cauzată de forța majoră dacă nu l-a folosit în alt scop decât cel stabilit."
+    },
+    {
+        "question": "Ce fel de împrumut se prezumă a fi întotdeauna gratuit?",
+        "retrieved_context": "Capitolul XIII Contractul de împrumut, Secţiunea a 3-a Împrumutul de consumație, Articolul 2.159 - Împrumutul este prezumat gratuit în lipsa unei stipulații contrare.",
+        "generated_answer": "Toate împrumuturile sunt prezumate gratuite.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece numai împrumuturile fără o stipulație privind costurile sunt prezumate gratuite, nu toate împrumuturile."
+    },
+    {
+        "question": "Cine suportă cheltuielile cu bunul împrumutat?",
+        "retrieved_context": "Capitolul XIII Contractul de împrumut, Secţiunea a 2-a Împrumutul de folosință, Articolul 2.151 - Comodatarul suportă cheltuielile pentru folosirea bunului.",
+        "generated_answer": "Cheltuielile sunt suportate întotdeauna de comodant.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 2.151 alin. (1), comodatarul suportă cheltuielile pentru utilizarea bunului, nu comodantul."
+    },
+    {
+        "question": "Poate comodantul să ceară restituirea bunului în orice moment?",
+        "retrieved_context": "Articolul 2.156 - Comodantul poate cere restituirea bunului înainte în caz de nevoie urgentă.",
+        "generated_answer": "Comodantul poate să ceară restituirea bunului ori de câte ori dorește.",
+        "correctness_label": "Incorrect",
+        "explanation": "Răspunsul este incorect deoarece comodantul poate cere restituirea anticipată doar în cazuri specificate, cum ar fi o nevoie urgentă."
+    },
+    {
+        "question": "Poate comodatarul să folosească bunul împrumutat în scopuri comerciale?",
+        "retrieved_context": "Articolul 2.148 - Comodatarul trebuie să folosească bunul conform contractului.",
+        "generated_answer": "Da, comodatarul poate folosi bunul pentru orice activitate comercială.",
+        "correctness_label": "Incorrect",
+        "explanation": "Comodatarul poate folosi bunul doar în conformitate cu destinația determinată prin contract, nu pentru activități comerciale nespecificate."
+    },
+    {
+        "question": "Sunt răspunzători comodatarii solidar pentru deteriorarea bunului?",
+        "retrieved_context": "Articolul 2.154 - Comodatarii sunt răspunzători solidar față de comodant.",
+        "generated_answer": "Fiecare comodatar este răspunzător individual și nu solidar.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 2.154 specifică că atunci când mai mulți comodatari împrumută același bun, ei răspund solidar."
+    },
+    {
+        "question": "Ce obligații are comodantul față de comodatar?",
+        "retrieved_context": "Articolul 2.152 - Comodantul este responsabil pentru vicii ascunse ale bunului.",
+        "generated_answer": "Comodantul nu are obligații față de comodatar odată ce bunul este înmânat.",
+        "correctness_label": "Incorrect",
+        "explanation": "Comodantul are obligații față de comodatar, inclusiv repararea prejudiciului cauzat de vicii ascunse, dacă le cunoștea și nu le-a comunicat."
+    },
+    {
+        "question": "Cine este responsabil pentru pieirea bunului dacă aceasta ar fi putut fi evitată?",
+        "retrieved_context": "Articolul 2.150 - Comodatarul răspunde pentru pieirea bunului dacă nu l-a salvat când ar fi putut.",
+        "generated_answer": "Comodantul este responsabil dacă bunul piere și ar fi putut fi salvat de comodatar.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 2.150, comodatarul este responsabil pentru pieirea bunului dacă ar fi putut preveni distrugerea, nu comodantul."
+    }
+]
