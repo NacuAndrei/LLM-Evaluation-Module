@@ -291,5 +291,138 @@
         "generated_answer": "Comodantul este responsabil dacă bunul piere și ar fi putut fi salvat de comodatar.",
         "correctness_label": "Incorrect",
         "explanation": "Conform Articolului 2.150, comodatarul este responsabil pentru pieirea bunului dacă ar fi putut preveni distrugerea, nu comodantul."
+    },
+    {
+        "question": "Ce pedepse sunt prevăzute pentru constituirea unui grup infracțional organizat?",
+        "retrieved_context": "Capitolul I Infracțiuni contra ordinii și liniștii publice, Articolul 367 - Inițierea sau constituirea unui grup infracțional organizat se pedepsește cu închisoarea de la unu la 5 ani și interzicerea exercitării unor drepturi.",
+        "generated_answer": "Pedeapsa este închisoarea de la unu la 5 ani și interzicerea exercitării unor drepturi.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 367 alin. (1), inițierea sau constituirea unui grup infracțional organizat este sancționată cu închisoare și interzicerea unor drepturi."
+    },
+    {
+        "question": "Cum este definit un grup infracțional organizat?",
+        "retrieved_context": "Capitolul I Infracțiuni contra ordinii și liniștii publice, Articolul 367 - Prin grup infracțional organizat se înțelege grupul structurat format din trei sau mai multe persoane.",
+        "generated_answer": "Un grup infracțional organizat este unul structurat, format din trei sau mai multe persoane, care acționează coordonat pentru a comite infracțiuni.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 367 alin. (6) definește un grup infracțional organizat ca fiind format din cel puțin trei persoane care acționează coordonat pentru a comite infracțiuni."
+    },
+    {
+        "question": "Ce înseamnă instigarea publică?",
+        "retrieved_context": "Capitolul I Infracțiuni contra ordinii și liniștii publice, Articolul 368 - Fapta de a îndemna publicul să săvârșească infracțiuni se pedepsește cu închisoare sau amendă.",
+        "generated_answer": "Instigarea publică este fapta de a îndemna publicul să comită infracțiuni.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 368, instigarea publică implică îndemnarea publicului să săvârșească infracțiuni și este pasibilă de pedeapsă."
+    },
+    {
+        "question": "Ce sancțiuni sunt prevăzute pentru incitarea la violență, ură sau discriminare?",
+        "retrieved_context": "Capitolul I Infracțiuni contra ordinii și liniștii publice, Articolul 369 - Incitarea publicului la violență, ură sau discriminare se pedepsește cu închisoare de la 6 luni la 3 ani sau cu amendă.",
+        "generated_answer": "Pedeapsa este închisoarea de la 6 luni la 3 ani sau amenda.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 369 prevede că incitarea la violență, ură sau discriminare este sancționată cu închisoare de la 6 luni la 3 ani sau cu amendă."
+    },
+    {
+        "question": "Care este pedeapsa pentru ultrajul contra bunelor moravuri?",
+        "retrieved_context": "Capitolul I Infracțiuni contra ordinii și liniștii publice, Articolul 375 - Fapta de a expune sau distribui fără drept imagini ce prezintă activități sexuale explicite se pedepsește cu închisoare de la 3 luni la 2 ani sau cu amendă.",
+        "generated_answer": "Pedeapsa este închisoarea de la 3 luni la 2 ani sau amenda.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 375, fapta de ultraj contra bunelor moravuri se sancționează cu închisoare sau amendă."
+    },
+    {
+        "question": "Ce presupune portul sau folosirea fără drept de obiecte periculoase?",
+        "retrieved_context": "Articolul 372 - Portul și folosirea fără drept de obiecte periculoase în anumite locuri se pedepsește cu închisoare sau amendă.",
+        "generated_answer": "Portul sau folosirea fără drept de obiecte periculoase, cum ar fi cuțitul sau substanțele iritant-lacrimogene, în locuri publice sau la adunări, se pedepsește cu închisoare sau amendă.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 372 prevede că portul fără drept de obiecte periculoase, cum ar fi cuțitul sau armele neletale, în locuri publice, manifestări cultural-sportive sau în mijloace de transport în comun, este sancționat cu închisoare de la 3 luni la 1 an sau amendă. Folosirea acestor obiecte este sancționată mai aspru, iar portul în locuri precum sediile autorităților publice este și mai grav sancționat."
+    },
+    {
+        "question": "Cum se pedepsește împiedicarea desfășurării unei adunări publice?",
+        "retrieved_context": "Articolul 373 - Împiedicarea, prin orice mijloace, a desfășurării unei adunări publice autorizate se pedepsește cu închisoarea de la 3 luni la un an sau cu amendă.",
+        "generated_answer": "Se pedepsește cu închisoarea de la 3 luni la un an sau cu amendă.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 373 sancționează împiedicarea desfășurării adunărilor publice cu închisoare de la 3 luni la un an sau cu amendă."
+    },
+    {
+        "question": "Ce implicații are tentativa la săvârșirea unei infracțiuni?",
+        "retrieved_context": "Articolul 370 - Încercarea de a determina săvârșirea unei infracțiuni se pedepsește cu închisoare de la unu la 5 ani sau cu amendă.",
+        "generated_answer": "Tentativa se pedepsește cu închisoare de la unu la 5 ani sau cu amendă.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 370, încercarea de a determina săvârșirea unei infracțiuni este sancționată penal cu închisoare de la unu la 5 ani sau cu amendă."
+    },
+    {
+        "question": "Care sunt sancțiunile pentru pornografia infantilă?",
+        "retrieved_context": "Articolul 374 - Producerea, deținerea de materiale pornografice cu minori se pedepsește cu închisoare.",
+        "generated_answer": "Producerea sau deținerea de materiale cu minori se pedepsește cu închisoare de la 3 la 10 ani.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 374 alin. (1) specifică pedepsele pentru pornografia infantilă, inclusiv închisoarea de la 3 la 10 ani."
+    },
+    {
+        "question": "Cum se pedepsește abandonul de familie?",
+        "retrieved_context": "Articolul 378 - Abandonul de familie se pedepsește cu închisoare de la 6 luni la 3 ani.",
+        "generated_answer": "Abandonul de familie de către persoana cu obligația de întreținere se pedepsește cu închisoare sau amendă.",
+        "correctness_label": "Correct",
+        "explanation": "Abandonul de familie, conform Articolului 378, alin. (1) este sancționat cu cu închisoare de la 6 luni la 3 ani sau cu amendă."
+    },
+    {
+        "question": "Cum se pedepsește tentativa conform Codului penal?",
+        "retrieved_context": "Capitolul IV Tentativa, Articolul 33 - Tentativa se sancționează cu pedeapsa pentru infracțiunea consumată, ale cărei limite se reduc la jumătate.",
+        "generated_answer": "Tentativa nu se pedepsește niciodată.",
+        "correctness_label": "Incorrect",
+        "explanation": "Tentativa se pedepsește când legea prevede în mod expres aceasta. Se sancționează cu pedeapsa pentru infracțiunea consumată, ale cărei limite se reduc la jumătate. Dacă pedeapsa pentru infracțiunea consumată este detențiunea pe viață, tentativa se sancționează cu închisoare de la 10 la 20 de ani."
+    },
+    {
+        "question": "Ce este infracțiunea continuată conform Codului penal?",
+        "retrieved_context": "Capitolul V Unitatea și pluralitatea de infracțiuni, Articolul 35 - Infracțiunea este continuată când o persoană săvârșește la diferite intervale de timp aceeași infracțiune.",
+        "generated_answer": "Infracțiunea continuată este săvârșită o singură dată și imediat.",
+        "correctness_label": "Incorrect",
+        "explanation": "Infracțiunea continuată implică multiple acte infracționale desfășurate în timp, nu o singură dată."
+    },
+    {
+        "question": "Cum se sancționează unitatea infracțiunilor complexe?",
+        "retrieved_context": "Capitolul V Unitatea și pluralitatea de infracțiuni, Articolul 36 - Infracțiunea complexă se sancționează cu pedeapsa pentru acea infracțiune.",
+        "generated_answer": "Infracțiunile complexe nu sunt sancționate niciodată.",
+        "correctness_label": "Incorrect",
+        "explanation": "Infracțiunile complexe sunt sancționate conform legilor în vigoare. Pentru infracțiunile complexe, pedeapsa este cea prevăzută de lege pentru acea infracțiune. Nu sunt lipsite de sancțiuni, iar maximul pentru infracțiuni continuate poate fi mărit cu cel mult 3 ani sau o treime din amenda prevăzută de lege."
+    },
+    {
+        "question": "Ce este concursul de infracțiuni?",
+        "retrieved_context": "Capitolul V Unitatea și pluralitatea de infracțiuni, Articolul 38 - Concursul de infracțiuni apare când două sau mai multe infracțiuni au fost săvârșite de aceeași persoană prin acțiuni distincte.",
+        "generated_answer": "Concursul de infracțiuni apare doar într-o singură infracțiune.",
+        "correctness_label": "Incorrect",
+        "explanation": "Concursul implică multiple infracțiuni comise, nu doar una."
+    },
+    {
+        "question": "Ce include tentativa conform Codului penal?",
+        "retrieved_context": "Capitolul IV Tentativa, Articolul 32 - Tentativa constă în punerea în executare a intenției de a săvârși infracțiunea.",
+        "generated_answer": "Tentativa include doar planificarea, fără nicio acțiune de executare.",
+        "correctness_label": "Incorrect",
+        "explanation": "Tentativa implică acțiuni de punere în executare, nu doar planificarea."
+    },
+    {
+        "question": "Cum se calculează pedeapsa în caz de infracțiune continuată?",
+        "retrieved_context": "Articolul 36 - Infracțiunea continuată se sancționează cu un maxim majorat de până la 3 ani.",
+        "generated_answer": "Pedeapsa pentru infracțiunea continuată nu poate fi mai mare decât pedeapsa inițială.",
+        "correctness_label": "Incorrect",
+        "explanation": "Pedeapsa poate fi mai mare decât maximul inițial cu până la 3 ani."
+    },
+    {
+        "question": "Cum se tratează tentativa dacă infracțiunea nu se consumă?",
+        "retrieved_context": "Articolul 32 - Tentativa implică punerea în executare a unei intenții, dar nu se consideră tentativă dacă imposibilitatea de consumare este datorată modului de execuție.",
+        "generated_answer": "Tentativa este întotdeauna pedepsită, indiferent de motivul neconsumării.",
+        "correctness_label": "Incorrect",
+        "explanation": "Nu există tentativă dacă imposibilitatea este datorată modului de execuție conceput."
+    },
+    {
+        "question": "Ce se întâmplă dacă cineva se desistă înainte ca infracțiunea să fie descoperită?",
+        "retrieved_context": "Articolul 34 - Nu se pedepsește autorul care s-a desistat înainte de descoperirea faptei.",
+        "generated_answer": "Persoana va fi totuși pedepsită.",
+        "correctness_label": "Incorrect",
+        "explanation": "Desistarea înaintea descoperirii faptei și prevenirea consumării infracțiunii le exonerează de pedeapsă."
+    },
+    {
+        "question": "Ce implică pedeapsa în cazul concursului de infracțiuni, când s-au stabilit numai pedepse cu închisoare?",
+        "retrieved_context": "Articolul 39 - În caz de concurs de infracțiuni, se aplică pedeapsa cea mai grea cu spor de o treime.",
+        "generated_answer": "Concursul de infracțiuni nu implică nicio majorare de pedeapsă.",
+        "correctness_label": "Incorrect",
+        "explanation": "Se adaugă un spor de o treime în concursul de infracțiuni, în cazul multiplelor pedepse cu închisoare."
     }
 ]
