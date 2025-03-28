@@ -557,6 +557,132 @@
         "generated_answer": "Erorile materiale nu pot fi niciodată rectificate după emitere.",
         "correctness_label": "Incorrect",
         "explanation": "Articolul 53 prevede că erorile materiale pot fi corectate de organul fiscal, din oficiu sau la cererea contribuabilului."
+    },
+    {
+        "question": "Cum este definit statul român în Constituția României?",
+        "retrieved_context": "Titlul 1 Principii generale, Articolul 1 - România este stat național, suveran și independent, unitar și indivizibil.",
+        "generated_answer": "România este definită ca stat național, suveran, independent, unitar și indivizibil.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 1, România este un stat național, suveran, unitar și indivizibil."
+    },
+    {
+        "question": "Cui aparține suveranitatea națională conform Constituției?",
+        "retrieved_context": "Titlul 1 Principii generale, Articolul 2 - Suveranitatea națională aparține poporului român.",
+        "generated_answer": "Suveranitatea națională aparține poporului român.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 2 afirmă că suveranitatea națională este exercitată de poporul român."
+    },
+    {
+        "question": "Cum este organizat teritoriul României?",
+        "retrieved_context": "Titlul 1 Principii generale, Articolul 3 - Teritoriul este organizat în comune, orașe și județe. În condițiile legii, unele orașe sunt declarate municipii.",
+        "generated_answer": "Teritoriul României este organizat în comune, orașe și județe, iar unele orașe sunt declarate municipii.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 3, teritoriul național este structurat în comune, orașe și județe, dar unele orașe sunt declarate municipii."
+    },
+    {
+        "question": "Ce garantează egalitatea între cetățeni în România?",
+        "retrieved_context": "Titlul 1 Principii generale, Articolul 4 - (1) Statul are ca fundament unitatea poporului român. (2) România este patria comună și indivizibilă a tuturor cetățenilor săi, fără deosebire de rasă, de naționalitate, de origine etnică, de limbă, de religie, de sex, de opinie, de apartenența politică, de avere sau de origine socială.",
+        "generated_answer": "România garantează egalitatea între cetățeni, indiferent de rasă, naționalitate, origine etnică, limbă, religie, sex, opinie, apartenență politică, avere sau origine socială.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 4 prevede că statul român asigură egalitatea între cetățeni fără discriminări de rasă, naționalitate, etnie, limbă, religie, sex, opinie, apartenență politică, avere sau origine socială."
+    },
+    {
+        "question": "Cum poate fi dobândită cetățenia română?",
+        "retrieved_context": "Titlul 1 Principii generale, Articolul 5 - Cetățenia română se dobândește, se păstrează sau se pierde în condițiile legii.",
+        "generated_answer": "Cetățenia română se dobândește, se păstrează sau se pierde în condițiile prevăzute de lege.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 5, cetățenia se reglementează prin legea organică."
+    },
+    {
+        "question": "Cum protejează statul identitatea minorităților naționale?",
+        "retrieved_context": "Articolul 6 - Statul recunoaște și garantează dreptul minorităților la păstrarea identității etnice, culturale, lingvistice și religioase..",
+        "generated_answer": "Statul garantează minorităților dreptul la păstrarea identității etnice, culturale, lingvistice și religioase..",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 6 asigură protecția identității etnice, culturale, lingvistice, religioase."
+    },
+    {
+        "question": "Ce drepturi au românii din afara frontierelor țării?",
+        "retrieved_context": "Articolul 7 - Statul sprijină întărirea legăturilor cu românii din afara granițelor.",
+        "generated_answer": "Românii din afara granițelor sunt sprijiniți pentru a-și păstra identitatea națională.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 7, statul sprijină românii din străinătate în păstrarea identității lor."
+    },
+    {
+        "question": "Ce rol au partidele politice în România?",
+        "retrieved_context": "Articolul 8 - Partidele politice contribuie la definirea și exprimarea voinței politice a cetățenilor.",
+        "generated_answer": "Partidele politice contribuie la exprimarea voinței politice a cetățenilor.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 8, partidele politice sunt esențiale pentru exprimarea voinței politice în societate."
+    },
+    {
+        "question": "Cum tratează statul român relațiile internaționale?",
+        "retrieved_context": "Articolul 10 - România întreține relații pașnice cu toate statele.",
+        "generated_answer": "România întreține relații pașnice cu toate statele.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 10 asigură că România are un angajament pentru relații pașnice internaționale."
+    },
+    {
+        "question": "Cum este garantat dreptul la liberă exprimare?",
+        "retrieved_context": "Articolul 30 - (1) Libertatea de exprimare a gândurilor, opiniilor sau credințelor și libertatea creațiilor de orice fel, prin viu grai, prin scris, prin imagini, prin sunete sau prin alte mijloace de comunicare în public, sunt inviolabile. (2) Cenzura de orice fel este interzisă. (3) Libertatea presei implică și libertatea de a înființa publicații.",
+        "generated_answer": "Libertatea de exprimare, care include gândurile, opiniile și credințele prin orice mijloace, este inviolabilă. Cenzura este interzisă, iar libertatea presei include și dreptul de a înființa publicații.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 30 din Constituție asigură protecția libertății de exprimare în diverse forme și interzice cenzura, garantând libertatea presei și capacitatea de a înființa publicații."
+    },
+    {
+        "question": "Cine este responsabil de fidelitatea față de țară?",
+        "retrieved_context": "Capitolul 3 Îndatoririle fundamentale, Articolul 50 - Fidelitatea față de țară este sacră. Cetățenii cu funcții publice și militarii sunt obligați să-și îndeplinească cu credință obligațiile, depunând jurământul cerut de lege.",
+        "generated_answer": "Fidelitatea față de țară este sacră.",
+        "correctness_label": "Inorrect",
+        "explanation": "Articolul 50 afirmă că fidelitatea față de țară este sacră și subliniază responsabilitățile cetățenilor în funcții publice și ale militarilor, care trebuie să depună jurământul de credință. Răspunsul este incomplet, deci incorect, pentru că nu menționează nimic legat de cetățeni."
+    },
+    {
+        "question": "Respectarea Constituției este opțională pentru cetățeni?",
+        "retrieved_context": "Capitolul 3 Îndatoririle fundamentale, Articolul 51 - Respectarea Constituției și a legilor este obligatorie.",
+        "generated_answer": "Respectarea Constituției este opțională pentru anumiți cetățeni.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 51 prevede că respectarea Constituției și a legilor este obligatorie pentru toți cetățenii."
+    },
+    {
+        "question": "Sunt cetățenii obligați să contribuie la cheltuielile publice?",
+        "retrieved_context": "Capitolul 3 Îndatoririle fundamentale, Articolul 53 - Cetățenii au obligația să contribuie prin impozite și taxe.",
+        "generated_answer": "Cetățenii nu au nicio obligație de a plăti taxe.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 53 specifică clar obligația cetățenilor de a contribui la cheltuielile publice prin impozite și taxe."
+    },
+    {
+        "question": "Cum este numit Avocatul Poporului?",
+        "retrieved_context": "Articolul 55 - Avocatul Poporului este numit de Senat pentru 4 ani.",
+        "generated_answer": "Avocatul Poporului este numit de către Președintele României.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 55 stabilește că Avocatul Poporului este numit de Senat, nu de președinte."
+    },
+    {
+        "question": "Cine trebuie să sprijine atribuțiile Avocatului Poporului?",
+        "retrieved_context": "Articolul 56 - Autoritățile sunt obligate să asigure sprijin Avocatului Poporului.",
+        "generated_answer": "Avocatul Poporului nu este sprijinit de către o parte anume în exercitarea atribuțiilor sale.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 56 prevede obligația autorităților de a sprijini Avocatul Poporului."
+    },
+    {
+        "question": "Cui prezintă Avocatul Poporului rapoarte anuale?",
+        "retrieved_context": "Articolul 57 - Avocatul Poporului prezintă rapoarte Parlamentului.",
+        "generated_answer": "Avocatul Poporului prezintă rapoarte doar președintelui.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 57, rapoartele sunt prezentate celor două Camere ale Parlamentului."
+    },
+    {
+        "question": "Cum sunt organizate și funcționează Camerele Parlamentului?",
+        "retrieved_context": "Articolul 58 - Parlamentul este alcătuit din Camera Deputaților și Senat.",
+        "generated_answer": "Parlamentul nu include structuri separate, este format doar dintr-o structură unitară",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 58 clarifică structura Parlamentului, care include două Camere distincte."
+    },
+    {
+        "question": "Cum sunt alese Camera Deputaților și Senatul?",
+        "retrieved_context": "Articolul 59 - Camerele sunt alese prin vot universal, egal, direct, secret și liber exprimat.",
+        "generated_answer": "Camera Deputaților și Senatul sunt numite de către președinte.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 59, cele două Camere sunt alese prin vot democratic, nu numite."
     }
 
 ]
