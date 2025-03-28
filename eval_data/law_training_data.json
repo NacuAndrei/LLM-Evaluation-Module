@@ -424,5 +424,139 @@
         "generated_answer": "Concursul de infracțiuni nu implică nicio majorare de pedeapsă.",
         "correctness_label": "Incorrect",
         "explanation": "Se adaugă un spor de o treime în concursul de infracțiuni, în cazul multiplelor pedepse cu închisoare."
+    },
+    {
+        "question": "Ce stabilește principiul legalității în administrarea creanțelor fiscale?",
+        "retrieved_context": "Capitolul II Principii generale de conduită în administrarea creanțelor fiscale, Articolul 4 - Creanțele fiscale și obligațiile contribuabilului sunt cele prevăzute de lege.",
+        "generated_answer": "Principiul legalității stabilește că creanțele fiscale și obligațiile contribuabilului sunt cele prevăzute de lege.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 4 precizează că toate creanțele și obligațiile fiscale trebuie să fie conform legii."
+    },
+    {
+        "question": "Cum se asigură aplicarea unitară a legislației fiscale?",
+        "retrieved_context": "Capitolul II Principii generale de conduită în administrarea creanțelor fiscale, Articolul 5 - Organul fiscal este obligat să aplice unitar legislația fiscală pe teritoriul României.",
+        "generated_answer": "Aplicarea unitară a legislației fiscale este asigurată de organul fiscal care este obligat să o aplice uniform pe teritoriul României.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 5, aplicarea unitară este o obligație a organului fiscal."
+    },
+    {
+        "question": "Ce trebuie să respecte organele fiscale în interpretarea legislației fiscale?",
+        "retrieved_context": "Capitolul III Aplicarea prevederilor legislației fiscale, Articolul 13 - Interpretarea legislației trebuie să respecte voința legiuitorului.",
+        "generated_answer": "Organele fiscale trebuie să respecte voința legiuitorului în interpretarea legislației fiscale. Dacă voința nu este clară, se ia în considerare scopul emiterii actului normativ.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 13 subliniază respectarea voinței legiuitorului și, dacă aceasta nu este clară, scopul actului normativ este utilizat ca ghid."
+    },
+    {
+        "question": "Ce înseamnă principiul bunei-credințe în relațiile fiscale?",
+        "retrieved_context": "Capitolul II Principii generale de conduită în administrarea creanțelor fiscale, Articolul 12 - (1) Relaţiile dintre contribuabil/plătitor şi organul fiscal trebuie să fie fundamentate pe bună-credinţă. (2) Contribuabilul/Plătitorul trebuie să îşi îndeplinească obligaţiile şi să îşi exercite drepturile potrivit scopului în vederea căruia au fost recunoscute de lege şi să declare corect datele şi informaţiile privitoare la obligaţiile fiscale datorate. (3) Organul fiscal trebuie să respecte drepturile contribuabilului/plătitorului în fiecare procedură de administrare a creanţelor fiscale aflată în derulare. (4) Buna-credinţă a contribuabililor se prezumă până când organul fiscal dovedeşte contrariul.",
+        "generated_answer": "Principiul bunei-credințe înseamnă că relațiile fiscale trebuie să fie fundamentate pe încredere reciprocă și declarații corecte. Contribuabilul trebuie să-și îndeplinească obligațiile potrivit scopului legal, iar organul fiscal trebuie să respecte drepturile contribuabilului. Buna-credință a contribuabililor se prezumă până când organul fiscal dovedește contrariul.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 12 descrie că relațiile fiscale sunt guvernate de buna-credință, impunând contribuabililor să îndeplinească obligațiile conform legii și organului fiscal să respecte drepturile contribuabilului, prezumând buna-credință până la proba contrară."
+    },
+    {
+        "question": "Cum se interpretează prevederile fiscale susceptibile de mai multe înțelesuri?",
+        "retrieved_context": "Capitolul III Aplicarea prevederilor legislației fiscale, Articolul 13 - (1) Interpretarea reglementărilor fiscale trebuie să respecte voinţa legiuitorului aşa cum este exprimată în lege. (2) În cazul în care voinţa legiuitorului nu reiese clar din textul legii, se ia în considerare scopul emiterii actului normativ. (3) Prevederile legislaţiei fiscale se interpretează unele prin altele. (4) Prevederile susceptibile de mai multe înțelesuri se interpretează în sensul în care corespund cel mai bine scopului legii. (5) Prevederile se interpretează în sensul în care pot produce efecte. (6) Dacă prevederile rămân neclare, acestea se interpretează în favoarea contribuabilului/plătitorului.",
+        "generated_answer": "Prevederile se interpretează în sensul care corespunde cel mai bine scopului legii.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 13, aceste prevederi se interpretează respectând voința legiuitorului și, când aceasta nu este clară, scopul legii. Dacă prevederile sunt susceptibile de mai multe înțelesuri, se aleg acelea care corespund scopului legii și care pot produce efecte. Dacă încă sunt neclare, interpretarea va fi în favoarea contribuabilului."
+    },
+    {
+        "question": "Ce presupune exercitarea dreptului de apreciere de către organul fiscal?",
+        "retrieved_context": "Articolul 6 - Organul fiscal apreciează relevanța stărilor de fapt fiscale prin mijloace de probă.",
+        "generated_answer": "Organul fiscal apreciează relevanța faptelor fiscale folosind mijloace de probă prevăzute de lege.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 6 detaliază cum organul fiscal își exercită dreptul de apreciere."
+    },
+    {
+        "question": "Care este limba oficială utilizată în administrația fiscală?",
+        "retrieved_context": "Articolul 8 - Limba oficială în administrația fiscală este limba română.",
+        "generated_answer": "Limba oficială utilizată în administrația fiscală este limba română.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 8, limba română este obligatorie în administrația fiscală."
+    },
+    {
+        "question": "Ce este dreptul de a fi ascultat?",
+        "retrieved_context": "Articolul 9 - Înaintea luării deciziei, organul fiscal este obligat să asigure contribuabilului posibilitatea de a-și exprima punctul de vedere.",
+        "generated_answer": "Dreptul de a fi ascultat asigură contribuabilului posibilitatea de a-și exprima punctul de vedere înainte de decizie.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 9 garantează acest drept contribuabilului în etapa decizională."
+    },
+    {
+        "question": "Ce prevede articolul despre secretul fiscal?",
+        "retrieved_context": "Articolul 11 - Personalul din cadrul organului fiscal este obligat să păstreze secretul informațiilor.",
+        "generated_answer": "Personalul fiscal trebuie să păstreze secretul informațiilor aflate în exercitarea atribuțiilor.",
+        "correctness_label": "Correct",
+        "explanation": "Articolul 11 subliniază obligația personalului fiscal de a păstra secretul fiscal."
+    },
+    {
+        "question": "Cum se naște o creanță fiscală?",
+        "retrieved_context": "Articolul 21 - (1) Dreptul de creanţă fiscală şi obligaţia fiscală corelativă se nasc în momentul constituirii bazei de impozitare care le generează sau în momentul la care contribuabilul/plătitorul este îndreptăţit să ceară restituirea. (2) Se naște dreptul organului fiscal de a stabili obligația fiscală datorată sau dreptul contribuabilului de a solicita restituirea.",
+        "generated_answer": "Creanța fiscală se naște în momentul constituirii bazei de impozitare sau atunci când contribuabilul este îndreptățit să ceară restituirea.",
+        "correctness_label": "Correct",
+        "explanation": "Conform Articolului 21, creanța fiscală apare odată cu constituirea bazei de impozitare sau atunci când contribuabilul are dreptul de a solicita restituirea, dând naștere obligației fiscale și dreptului de restituire."
+    },
+    {
+        "question": "Ce elemente trebuie să conțină un act administrativ fiscal emis pe hârtie?",
+        "retrieved_context": "Capitolul IV Actele emise de organele fiscale, Articolul 46 - Actul administrativ fiscal se emite în scris.",
+        "generated_answer": "Actul administrativ fiscal emis pe hârtie trebuie să conțină doar data și obiectul actului.",
+        "correctness_label": "Incorrect",
+        "explanation": "Actul administrativ emis pe hârtie trebuie să conțină multiple elemente, inclusiv denumirea organului fiscal, datele contribuabilului, temeiul legal și altele, conform Articolului 46."
+    },
+    {
+        "question": "Cum se stabilește competența de comunicare a actelor administrative fiscale?",
+        "retrieved_context": "Capitolul IV Actele emise de organele fiscale, Articolul 47 - Actul administrativ fiscal trebuie comunicat contribuabilului căruia îi este destinat.",
+        "generated_answer": "Competenta de comunicare nu este reglementată de niciun articol.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 47 reglementează clar cum trebuie comunicat un act administrativ fiscal către contribuabil."
+    },
+    {
+        "question": "Când produce efecte un act administrativ fiscal?",
+        "retrieved_context": "Capitolul IV Actele emise de organele fiscale, Articolul 48 - Actul produce efecte doar dacă este comunicat.",
+        "generated_answer": "Un act administrativ fiscal produce efecte imediat după semnare, fără a fi necesară comunicarea.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 48 prevede că un act produce efecte doar după ce este comunicat contribuabilului."
+    },
+    {
+        "question": "Cum se face comunicarea prin publicitate pentru actele administrative fiscale?",
+        "retrieved_context": "Capitolul IV Actele emise de organele fiscale, Articolul 47 - Comunicarea prin publicitate se efectuează prin afişarea unui anunţ la sediul organului fiscal.",
+        "generated_answer": "Comunicarea prin publicitate presupune trimiterea unui e-mail contribuabilului.",
+        "correctness_label": "Incorrect",
+        "explanation": "Conform Articolului 47, comunicarea prin publicitate implică afișarea unui anunț la sediul organului fiscal și pe anumite site-uri."
+    },
+    {
+        "question": "Ce se întâmplă dacă un act administrativ fiscal nu este comunicat potrivit legii?",
+        "retrieved_context": "Capitolul IV Actele emise de organele fiscale, Articolul 48 - Actul care nu a fost comunicat conform art. 47 nu este opozabil contribuabilului.",
+        "generated_answer": "Un act nesuspectat poate fi totuși aplicat contribuabilului.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 48 precizează că un act necomunicat corespunzător nu este opozabil contribuabilului și nu produce efecte juridice."
+    },
+    {
+        "question": "Ce înseamnă nulitatea actului administrativ fiscal?",
+        "retrieved_context": "Articolul 49 - Actul administrativ fiscal este nul dacă nu cuprinde toate elementele esențiale.",
+        "generated_answer": "Nulitatea nu este niciodată aplicabilă actelor administrative fiscale.",
+        "correctness_label": "Incorrect",
+        "explanation": "Un act administrativ fiscal poate fi declarat nul dacă nu respectă condițiile legale prevăzute în Articolul 49."
+    },
+    {
+        "question": "Când se poate modifica un act administrativ fiscal?",
+        "retrieved_context": "Articolul 50 - Actul administrativ fiscal poate fi modificat de organul fiscal competent.",
+        "generated_answer": "Actul nu poate fi modificat niciodată după emitere.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 50 prevede că actul administrativ fiscal poate fi anulat, desființat sau modificat sub anumite condiții."
+    },
+    {
+        "question": "În ce format pot fi emise actele administrative fiscale?",
+        "retrieved_context": "Articolul 46 - Actul administrativ fiscal se emite în scris, pe suport hârtie sau electronic.",
+        "generated_answer": "Actele administrative fiscale pot fi emise doar verbal.",
+        "correctness_label": "Incorrect",
+        "explanation": "Actele administrative fiscale trebuie emise în scris, pe suport hârtie sau electronic, conform Articolului 46."
+    },
+    {
+        "question": "Cum se rectifică erorile materiale din actele fiscale?",
+        "retrieved_context": "Articolul 53 - Organul fiscal poate îndrepta erorile materiale din actul administrativ fiscal.",
+        "generated_answer": "Erorile materiale nu pot fi niciodată rectificate după emitere.",
+        "correctness_label": "Incorrect",
+        "explanation": "Articolul 53 prevede că erorile materiale pot fi corectate de organul fiscal, din oficiu sau la cererea contribuabilului."
     }
+
 ]
